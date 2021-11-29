@@ -42,7 +42,7 @@ const HomeScreen = (props) => {
                         uri: item.url,
                     }}
                 />
-                <Text style={{fontSize: 16}}>{item.name}</Text>
+                <Text style={{color: colors.primary, fontSize: 16}}>{item.name}</Text>
             </View>
         )
     }
