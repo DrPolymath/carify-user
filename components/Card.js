@@ -21,15 +21,15 @@ const Card = ({ object, onPress, selectedObject }) => {
         >
             {object.url ? (
                 <Image
-                style={{
-                    width: 50,
-                    height: 50,
-                    resizeMode: 'contain'
-                }}
-                source={{
-                    uri: object.url,
-                }}
-            />
+                    style={{
+                        width: 50,
+                        height: 50,
+                        resizeMode: 'contain'
+                    }}
+                    source={{
+                        uri: object.url,
+                    }}
+                />
             ) : (
                 <View></View>
             ) }
