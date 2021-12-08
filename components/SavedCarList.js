@@ -13,6 +13,7 @@ const SavedCarList = ({ savedCars, handleSetViewCarDetails }) => {
         <View style={styles.container}>
             {savedCars ? (
                 <FlatList
+                    showsVerticalScrollIndicator={false}
                     numColumns={2}
                     horizontal={false}
                     data={savedCars}

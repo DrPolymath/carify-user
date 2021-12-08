@@ -9,8 +9,8 @@ const SavedScreen = ({ auth }) => {
     const [viewCarDetails, setViewCarDetails] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
 
-    const handleSetViewCarDetails = (carInfo) => {
-        setViewCarDetails(true)
+    const handleSetViewCarDetails = (carInfo, viewCarDetails) => {
+        setViewCarDetails(viewCarDetails)
         setSelectedCar(carInfo)
     }
 
@@ -19,7 +19,7 @@ const SavedScreen = ({ auth }) => {
             <View style={styles.container}>
                 
                 {viewCarDetails === true ? (
-                    <CarDetails selectedCar={selectedCar}/>
+                    <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails}/>
                 ) : (
                     <SavedCarList auth={auth} handleSetViewCarDetails={handleSetViewCarDetails}/>
                 )}

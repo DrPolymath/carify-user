@@ -50,7 +50,7 @@ const OutputCompareSecond = ({ carBrand, carModel, carVariant, handleClear }) =>
     return (
         <ScrollView>
             {carBrandObject && carModelObject && carVariantObject ? (
-                <View>
+                <View style={{ marginHorizontal: 10 }}>
                     <OutputCompareCard 
                         carBrandObject={carBrandObject} 
                         carModelObject={carModelObject} 

@@ -63,7 +63,7 @@ export default connect(null, mapDispatchToProps)(OutputCompareCard)
 const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: 'white',
-        margin: 40,
+        margin: 30,
         padding: 10,
         borderWidth: 0,
         borderRadius: 20,

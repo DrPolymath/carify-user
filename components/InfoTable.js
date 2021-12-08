@@ -4,7 +4,7 @@ import { DataTable, useTheme } from 'react-native-paper';
 
 const optionsPerPage = [2, 3, 4];
 
-const Table = ({ carBrandObject, carModelObject, carVariantObject }) => {
+const InfoTable = ({ selectedCar }) => {
 
     const { colors } = useTheme();
     const [page, setPage] = React.useState(0);
@@ -18,17 +18,17 @@ const Table = ({ carBrandObject, carModelObject, carVariantObject }) => {
         <DataTable style={{ backgroundColor: 'white' }}>
             <DataTable.Header style={{ backgroundColor: colors.primary }}>
                 <DataTable.Title><Text style={{ color: 'white' }}>Overview</Text></DataTable.Title>
-                <DataTable.Title numeric><Text style={{ color: 'white' }}>{carBrandObject.carBrandName} {carModelObject.carModelName}</Text></DataTable.Title>
+                <DataTable.Title numeric><Text style={{ color: 'white' }}>{selectedCar.carBrandName} {selectedCar.carModelName}</Text></DataTable.Title>
             </DataTable.Header>
 
             <DataTable.Row>
                 <DataTable.Cell>Brand</DataTable.Cell>
-                <DataTable.Cell numeric>{carBrandObject.carBrandName}</DataTable.Cell>
+                <DataTable.Cell numeric>{selectedCar.carBrandName}</DataTable.Cell>
             </DataTable.Row>
 
             <DataTable.Row>
                 <DataTable.Cell>Starting Price</DataTable.Cell>
-                <DataTable.Cell numeric>{carVariantObject.price}</DataTable.Cell>
+                <DataTable.Cell numeric>{selectedCar.price}</DataTable.Cell>
             </DataTable.Row>
 
             <DataTable.Row>
@@ -45,22 +45,10 @@ const Table = ({ carBrandObject, carModelObject, carVariantObject }) => {
                 <DataTable.Cell>Vehicle Type</DataTable.Cell>
                 <DataTable.Cell numeric></DataTable.Cell>
             </DataTable.Row>
-
-            {/* <DataTable.Pagination
-                page={page}
-                numberOfPages={3}
-                onPageChange={(page) => setPage(page)}
-                label="1-2 of 6"
-                optionsPerPage={optionsPerPage}
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                showFastPagination
-                optionsLabel={'Rows per page'}
-            /> */}
         </DataTable>
     )
 }
 
-export default Table
+export default InfoTable
 
 const styles = StyleSheet.create({})

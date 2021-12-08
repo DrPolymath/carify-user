@@ -13,7 +13,7 @@ const SavedCarCard = ({ carInfo, removeSavedCar, handleSetViewCarDetails }) => {
     }
 
     return (
-        <TouchableOpacity style={styles.cardContainer} onPress={() => handleSetViewCarDetails(carInfo)}>
+        <TouchableOpacity style={styles.cardContainer} onPress={() => handleSetViewCarDetails(carInfo, true)}>
             <IconButton 
                 icon="delete"
                 color={colors.placeholder}
