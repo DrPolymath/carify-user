@@ -26,8 +26,12 @@ const HomeScreen = (props) => {
             <View style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor:'floralwhite',
+                backgroundColor:'white',
                 borderRadius: 20,
+                shadowOffset: { width: 10, height: 10 },
+                shadowColor: 'black',
+                shadowOpacity: 1,
+                elevation: 3,
                 height: 150,
                 marginTop: 10,
                 marginLeft: 10,

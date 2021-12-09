@@ -41,11 +41,34 @@ const OutputCompareThird = ({ carBrand, carModel, carVariant, handleClear }) => 
             ],
             storeAs: 'selectedComparisonCarVariantThird',
         },
+        {
+            collection: 'carBrand',
+            doc: carBrand,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: carModel,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: carVariant,
+                            subcollections: [
+                                {
+                                    collection: 'colors',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'selectedCarVariantThirdColors',
+        }
     ])
 
     const carBrandObject = useSelector((state) => state.firestore.data.selectedComparisonCarBrandThird)
     const carModelObject = useSelector((state) => state.firestore.data.selectedComparisonCarModelThird)
     const carVariantObject = useSelector((state) => state.firestore.data.selectedComparisonCarVariantThird)
+    const carVariantColors = useSelector((state) => state.firestore.data.selectedCarVariantThirdColors)
 
     return (
         <ScrollView>
@@ -58,7 +81,9 @@ const OutputCompareThird = ({ carBrand, carModel, carVariant, handleClear }) => 
                         handleClear={handleClear}  
                         carVariant={carVariant}  
                     />
-                    <Table carBrandObject={carBrandObject} carModelObject={carModelObject} carVariantObject={carVariantObject}/>
+                    {carVariantColors ? (
+                        <Table carBrandObject={carBrandObject} carModelObject={carModelObject} carVariantObject={carVariantObject} carVariantColors={carVariantColors}/>
+                    ) : null}
                 </View>
             ): null}
         </ScrollView>

@@ -31,8 +31,31 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails }) => {
             ],
             storeAs: 'photos',
         },
+        {
+            collection: 'carBrand',
+            doc: selectedCar.carBrandId,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: selectedCar.carModelId,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: selectedCar.carVariantId,
+                            subcollections: [
+                                {
+                                    collection: 'colors'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'colors',
+        },
     ])
     const photos = useSelector((state) => state.firestore.data.photos)
+    const carVariantColors = useSelector((state) => state.firestore.data.colors)
 
     const navigateToInfosTab = () => {
         if (!carDetailsTabActive) {
@@ -52,7 +75,10 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails }) => {
 
     return (
         <View style={styles.container}>
-            <AntDesign style={{ flex: 1}} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false)} />
+            <View style={{ flex: 1, flexDirection: 'row',marginLeft: 20, marginTop: 10 }}>
+                <AntDesign style={{ color: colors.primary }} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false)} />
+                <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false)}>Saved Car List</Text>
+            </View>
             <View style={styles.cardContainer}>
                 <Image
                     style={{
@@ -79,7 +105,9 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails }) => {
                 >
                     <View style={styles.slide}>
                         <ScrollView>
-                            <InfoTable selectedCar={selectedCar} />
+                            {carVariantColors ? (
+                                <InfoTable selectedCar={selectedCar} carVariantColors={carVariantColors}/>
+                            ) : null}
                         </ScrollView>
                     </View>
                     <View style={styles.slide}>

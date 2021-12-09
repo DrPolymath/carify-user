@@ -3,8 +3,6 @@ import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
 
 const PhotoList = ({ photos }) => {
 
-    console.log(photos)
-
     return (
         <View style={styles.container}>
             {photos ? (

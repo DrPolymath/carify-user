@@ -16,6 +16,7 @@ const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, h
             carModelId: carVariantObject.cmId,
             carModelName: carModelObject.carModelName,
             carModelImgUrl: carModelObject.url,
+            carModelBodyType: carModelObject.bodyType,
             carVariantId: carVariant,
             carVariantName: carVariantObject.carVariantName,
             price: carVariantObject.price
