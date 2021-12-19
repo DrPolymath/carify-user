@@ -83,9 +83,14 @@ const UpdateProfileForm = (props) => {
                 setValue={setGender}
                 list={genderList}
             />
-            <Button style={{ marginTop: 20 }} mode="contained" onPress={updateProfile}>
-                Update Profile
-            </Button>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+                <Button mode="contained" onPress={hideDialog} style={{ width:'45%' }}>
+                    Cancel
+                </Button>
+                <Button mode="contained" onPress={updateProfile} style={{ width:'45%' }}>
+                    Update
+                </Button>
+            </View>
         </View>
     )
 }

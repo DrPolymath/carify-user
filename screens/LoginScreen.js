@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, StatusBar, SafeAreaView, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, StatusBar, SafeAreaView, View, Image, TouchableOpacity, ToastAndroid } from 'react-native'
 import { Text, Button, TextInput } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { signIn } from '../actions/auth.action';
@@ -15,7 +15,7 @@ const LoginScreen = (props) => {
 
     const emailHasErrors = () => {
         if(email !== '') {
-            return !email.includes('@');
+            return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
         } else {
             return false;
         }
@@ -24,7 +24,7 @@ const LoginScreen = (props) => {
 
     const passwordHasErrors = () => {
         if(password !== '') {
-            return password.length < 8;
+            return !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
         } else {
             return false;
         }
@@ -32,11 +32,12 @@ const LoginScreen = (props) => {
     };
 
     const signIn = () => {
-
-        if(emailHasErrors()) {
-            alert('The email is not valid.')
+        if (email == '' || password == '') {
+            ToastAndroid.showWithGravity("Please enter the email and password to log in.", ToastAndroid.SHORT, ToastAndroid.CENTER);
+        } else if(emailHasErrors()) {
+            ToastAndroid.showWithGravity("The email is not valid.", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else if (passwordHasErrors()) {
-            alert('Password characters is less than 8 characters.')
+            ToastAndroid.showWithGravity("The password must al least has a minimum of eight characters, at least one letter, one number and one special character.", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else {
             let creds = {
                 email: email,
@@ -49,9 +50,9 @@ const LoginScreen = (props) => {
 
     useEffect(() => {
         if(props.authError === "There is no user record corresponding to this identifier. The user may have been deleted."){
-            alert("The user do not exist.")
+            ToastAndroid.showWithGravity("The user do not exist.", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else if (props.authError === "The password is invalid or the user does not have a password.") {
-            alert("The password is invalid.")
+            ToastAndroid.showWithGravity("The password is invalid.", ToastAndroid.SHORT, ToastAndroid.CENTER);
         }
     }, [props.authError])
 
@@ -115,6 +116,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen)
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "white",
         marginTop: StatusBar.currentHeight,
         flex: 1,
         justifyContent: 'center',

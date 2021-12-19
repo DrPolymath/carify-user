@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/core';
-import { SafeAreaView, Text, StatusBar, StyleSheet, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import { Button, TextInput } from 'react-native-paper';
+import { SafeAreaView, Text, StatusBar, StyleSheet, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ToastAndroid } from 'react-native'
+import { Button, HelperText, TextInput } from 'react-native-paper';
 import DropDown from 'react-native-paper-dropdown';
 import { signUp } from '../actions/auth.action';
 import { connect } from 'react-redux';
@@ -32,7 +32,8 @@ const SignUpScreen = (props) => {
         // Username length should be between 4 and 20 characters.
         // Spaces are not allowed
         if(username !== '') {
-            return !username.match(new RegExp("^\\w[\\w.]{2,18}\\w$"));
+            // return !username.match(new RegExp("/^[a-zA-Z]+$/"));
+            return !/^[A-Za-z0-9_]{4,20}$/.test(username);
         } else {
             return false;
         }
@@ -41,7 +42,7 @@ const SignUpScreen = (props) => {
 
     const emailHasErrors = () => {
         if(email !== '') {
-            return !email.includes('@');
+            return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
         } else {
             return false;
         }
@@ -50,7 +51,7 @@ const SignUpScreen = (props) => {
 
     const passwordHasErrors = () => {
         if(password !== '') {
-            return password.length < 8;
+            return !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password);
         } else {
             return false;
         }
@@ -70,18 +71,45 @@ const SignUpScreen = (props) => {
 
     const signUp = () => {
         if(usernameHasErrors()){
-            alert('Username can only contain letters, numbers, periods and underscores.'+
-            'Username can start and end with underscores but never with periods.'+
-            'Username length should be between 4 and 20 characters.'+
-            'Spaces are not allowed.')
+            ToastAndroid.showWithGravityAndOffset(
+                "Username can only contain letters, numbers and underscores and also should be between 4 and 20 characters.",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else if(emailHasErrors()){
-            alert('The email is not valid.')
+            ToastAndroid.showWithGravityAndOffset(
+                "The email is not valid.",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else if(passwordHasErrors()){
-            alert('Password characters is less than 8 characters.')
+            ToastAndroid.showWithGravityAndOffset(
+                "The password must al least has a minimum of eight characters, at least one letter, one number and one special character.",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else if(birthDateHasErrors()){
-            alert('Birth date is in the wrong format.')
+            ToastAndroid.showWithGravityAndOffset(
+                "Birth date is in the wrong format.",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else if(gender === ''){
-            alert('Plaese select your gender.')
+            ToastAndroid.showWithGravityAndOffset(
+                "Please select your gender.",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else {
             let creds = {
                 username: username,
@@ -113,6 +141,11 @@ const SignUpScreen = (props) => {
                             value={username}
                             onChangeText={(text) => setUsername(text)}
                         />
+                        {usernameHasErrors() ? (
+                            <HelperText type="error">
+                                Username can only contain letters, numbers and underscores and also should be between 4 and 20 characters.
+                            </HelperText>
+                        ): null}
                         <TextInput
                             error={emailHasErrors()}
                             mode="outlined" 
@@ -120,6 +153,11 @@ const SignUpScreen = (props) => {
                             value={email}
                             onChangeText={(text) => setEmail(text)}
                         />
+                        {emailHasErrors() ? (
+                            <HelperText type="error">
+                                The email is invalid.
+                            </HelperText>
+                        ): null}
                         <TextInput 
                             error={passwordHasErrors()}
                             mode="outlined"
@@ -128,6 +166,11 @@ const SignUpScreen = (props) => {
                             value={password}
                             onChangeText={(text) => setPassword(text)}
                         />
+                        {passwordHasErrors() ? (
+                            <HelperText type="error">
+                                The password must al least has a minimum of eight characters, at least one letter, one number and one special character.
+                            </HelperText>
+                        ): null}
                         <TextInput 
                             error={birthDateHasErrors()}
                             mode="outlined"
@@ -137,6 +180,11 @@ const SignUpScreen = (props) => {
                             onChangeText={(text) => setBirthDate(text)}
                             onSubmitEditing={signUp}
                         />
+                        {birthDateHasErrors() ? (
+                            <HelperText type="error">
+                                The birthdate format should be DD/MM/YYYY.
+                            </HelperText>
+                        ): null}
                         <DropDown
                             label={'Gender'}
                             mode={'outlined'}
@@ -177,6 +225,7 @@ export default connect(null, mapDispatchToProps)(SignUpScreen)
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "white",
         marginTop: StatusBar.currentHeight,
         flex: 1,
         justifyContent: 'center',

@@ -37,7 +37,9 @@ const Card = ({ object, onPress, selectedObject }) => {
             <Text style={{ textAlign: 'center', color: colors.primary}} numberOfLines={3} >
             {object.carBrandName}
             {object.carTypeName}
-            {object.maxPrice}
+            {object.maxPrice ? (
+                "< " + object.maxPrice
+            ) : null}
             </Text>
         </TouchableOpacity>
     )

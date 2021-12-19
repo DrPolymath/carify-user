@@ -76,8 +76,8 @@ const HomeScreen = (props) => {
 
     const TFC = [
         {
-            name:"Nissan Almera",
-            url: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FmodelLogo%2FNissanAlmera.jpg?alt=media&token=b68bc2a0-dff4-4146-b585-da29dd23335e",
+            name:"Kia Picanto",
+            url: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FmodelLogo%2FKiaPicanto.jpg?alt=media&token=f1ad3645-328b-4fab-9b0c-14113423c121",
         },
         {
             name:"Honda Jazz",

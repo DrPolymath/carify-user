@@ -20,6 +20,7 @@ const MainScreen = () => {
             <Tab.Navigator
                 screenOptions={{
                     headerShown: true,
+                    tabBarActiveTintColor: '#5280E9',
                 }}
             >
                 <Tab.Screen 

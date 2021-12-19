@@ -128,7 +128,7 @@ const InputCompareCardFirst = (props) => {
     } else {
         return (
             <View>
-                <Text>Loading...</Text>
+                <Text></Text>
             </View>
         )
     }

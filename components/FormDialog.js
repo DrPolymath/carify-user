@@ -16,9 +16,9 @@ const FormDialog = ({ title }) => {
     return (
         <View>
             {title === 'Update Profile' ? (
-                <Button onPress={showDialog} mode='outlined' labelStyle={{ fontSize: 10 }}>Update Profile</Button>
+                <Button onPress={showDialog} mode='outlined' style={{ backgroundColor: 'white', borderWidth: 0, elevation: 3 }} labelStyle={{ fontSize: 10 }}>Update Profile</Button>
             ) : (
-                <Button onPress={showDialog} mode='outlined' labelStyle={{ fontSize: 10 }}>Update Interest</Button>
+                <Button onPress={showDialog} mode='outlined' style={{ backgroundColor: 'white', borderWidth: 0, elevation: 3 }} labelStyle={{ fontSize: 10 }}>Update Interest</Button>
             )}
             <Portal>
             <Dialog  visible={visible} onDismiss={hideDialog}>

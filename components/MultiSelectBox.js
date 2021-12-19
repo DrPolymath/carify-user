@@ -105,9 +105,14 @@ const MultiSelectBox = (props) => {
                 onTapClose={onMultiChangePriceRanges()}
                 isMulti
             />
-            <Button mode="contained" style={{ marginTop: 20 }} onPress={updateInterest}>
-                Save
-            </Button>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 20 }}>
+                <Button mode="contained" onPress={hideDialog} style={{ width:'45%' }}>
+                    Cancel
+                </Button>
+                <Button mode="contained" onPress={updateInterest} style={{ width:'45%' }}>
+                    Save
+                </Button>
+            </View>
         </View>
     )
 }

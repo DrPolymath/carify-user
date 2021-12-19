@@ -13,16 +13,16 @@ const UpdateProfilePicture = (props) => {
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(null);
 
-    useEffect(() => {
-        (async () => {
-        if (Platform.OS !== 'web') {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-            }
-        }
-        })();
-    }, []);
+    // useEffect(() => {
+    //     (async () => {
+    //     if (Platform.OS !== 'web') {
+    //         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    //         if (status !== 'granted') {
+    //         alert('Sorry, we need camera roll permissions to make this work!');
+    //         }
+    //     }
+    //     })();
+    // }, []);
 
     useEffect(() => {
         if(image) {
@@ -33,6 +33,16 @@ const UpdateProfilePicture = (props) => {
             props.updateProfilePicture(newProfile);
         }
     }, [image])
+
+    const askPermission = async () => {
+        if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+            }
+        }
+        pickImage();
+    }
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -165,7 +175,7 @@ const UpdateProfilePicture = (props) => {
              ) : (
                 maybeRenderImage()
              )}
-            <Button onPress={pickImage} mode='contained' color={colors.accent} labelStyle={{ fontSize: 8 }} style={{ marginTop: 10 }}>
+            <Button onPress={askPermission} mode='contained' color={colors.accent} labelStyle={{ fontSize: 8 }} style={{ marginTop: 10 }}>
                 Change
             </Button>
         </View>
