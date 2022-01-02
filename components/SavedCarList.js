@@ -27,6 +27,7 @@ const SavedCarList = ({ savedCars, handleSetViewCarDetails }) => {
 }
 
 const mapStateToProps = (state) => {
+    console.log(state.firestore.ordered.savedCar)
     return {
         savedCars: state.firestore.ordered.savedCar,
     }

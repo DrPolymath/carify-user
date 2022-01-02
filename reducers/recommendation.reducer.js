@@ -1,14 +1,13 @@
 const initialState = {
-    recommendedCars: [],
+    recommendedInput: [],
 };
 
 const recommendationReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'RECOMMENDED_CARS_STATE_CHANGED': {
-            console.log('load recommeded car')
+        case 'RECOMMENDED_INPUT_STATE_CHANGED': {
             return {
                 ...state,
-                recommendedCars: action.recommendedCars,
+                recommendedInput: action.recommendedInput,
             }
         }
         default: {
