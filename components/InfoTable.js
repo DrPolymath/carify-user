@@ -60,7 +60,7 @@ const InfoTable = ({ selectedCar, carVariantColors }) => {
 
             <DataTable.Row>
                 <DataTable.Cell>Vehicle Type</DataTable.Cell>
-                <DataTable.Cell numeric>{selectedCar.carModelBodyType}</DataTable.Cell>
+                <DataTable.Cell numeric>{selectedCar.bodyType}</DataTable.Cell>
             </DataTable.Row>
         </DataTable>
     )

@@ -1,27 +1,51 @@
 import React from 'react'
+import { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { Button, IconButton, useTheme } from 'react-native-paper'
 import { connect } from 'react-redux';
+import { updateClick } from '../actions/recommendation.action';
 import { addSavedCar } from '../actions/savedCar.action';
 
-const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, handleClear, carVariant, addSavedCar }) => {
+const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, handleClear, carVariant, addSavedCar, updateClick }) => {
 
     const { colors } = useTheme();
+
+    useEffect(() => {
+        let clickedCar = {
+            carBrandId: carModelObject.cbId,
+            carModelId: carVariantObject.cmId,
+            carVariantId: carVariant,
+            carVariantName: carVariantObject.carVariantName,
+            price: carVariantObject.price,
+            maleClick: carVariantObject.maleClick,
+            femaleClick: carVariantObject.femaleClick,
+            totalClick: carVariantObject.totalClick
+        }
+        updateClick(clickedCar)
+    }, []);
+    
 
     const saveCar = () => {
         let carInfo = {
             carBrandId: carModelObject.cbId,
             carBrandName: carBrandObject.carBrandName,
-            carBrandImgUrl: carBrandObject.url,
+            carBrandUrl: carBrandObject.url,
             carModelId: carVariantObject.cmId,
             carModelName: carModelObject.carModelName,
-            carModelImgUrl: carModelObject.url,
-            carModelBodyType: carModelObject.bodyType,
+            carModelUrl: carModelObject.url,
+            bodyType: carModelObject.bodyType,
             carVariantId: carVariant,
             carVariantName: carVariantObject.carVariantName,
-            price: carVariantObject.price
+            price: carVariantObject.price,
         }
-        addSavedCar(carInfo);
+
+        let clickInfo = {
+            maleClick: carVariantObject.maleClick,
+            femaleClick: carVariantObject.femaleClick,
+            totalClick: carVariantObject.totalClick
+        }
+        console.log(clickInfo)
+        addSavedCar(carInfo, clickInfo);
     }
 
     return (
@@ -55,7 +79,8 @@ const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, h
 
 const mapDispatchToProps = (dispatch) => {
     return{
-        addSavedCar: (carInfo) => dispatch(addSavedCar(carInfo))
+        addSavedCar: (carInfo, clickInfo) => dispatch(addSavedCar(carInfo, clickInfo)),
+        updateClick: (carInfo) => dispatch(updateClick(carInfo)),
     }
 }
 

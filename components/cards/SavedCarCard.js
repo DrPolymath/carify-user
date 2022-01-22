@@ -27,7 +27,7 @@ const SavedCarCard = ({ carInfo, removeSavedCar, handleSetViewCarDetails }) => {
                     height: 75,
                     resizeMode: 'contain',
                 }}
-                source={{ uri: carInfo.carModelImgUrl}}
+                source={{ uri: carInfo.carModelUrl}}
             />
             <Text style={{ color: colors.primary, textAlign: 'center' }}>{carInfo.carBrandName} {carInfo.carModelName}</Text>
         </TouchableOpacity>

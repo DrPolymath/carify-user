@@ -12,7 +12,7 @@ def recommendCar(selectedCar):
 
     # Data Combination
     data_recommend = car_data.drop(columns=['carBrandId', 'carBrandUrl', 'carModelId',
-                                   'carModelUrl', 'carVariantId', 'carModelName', 'carVariantName', 'price'])
+                                   'carModelUrl', 'carVariantId', 'carModelName', 'carVariantName', 'price', 'maleClick', 'femaleClick', 'totalClick'])
     data_recommend['combine'] = data_recommend[data_recommend.columns[0:3]].apply(
         lambda x: ','.join(x.dropna().astype(str)), axis=1)
     data_recommend = data_recommend.drop(
@@ -50,9 +50,12 @@ def recommendCar(selectedCar):
     car_variant_id = car_data['carVariantId'].iloc[car_indices]
     car_variant_name = car_data['carVariantName'].iloc[car_indices]
     car_variant_price = car_data['price'].iloc[car_indices]
+    car_variant_maleClick = car_data['maleClick'].iloc[car_indices]
+    car_variant_femaleClick = car_data['femaleClick'].iloc[car_indices]
+    car_variant_totalClick = car_data['totalClick'].iloc[car_indices]
 
     recommendation_data = pd.DataFrame(columns=['carBrandId', 'carBrandName', 'carBrandUrl', 'carModelId',
-                                       'carModelName', 'carModelUrl', 'bodyType', 'carVariantId', 'carVariantName', 'price'])
+                                       'carModelName', 'carModelUrl', 'bodyType', 'carVariantId', 'carVariantName', 'price', 'maleClick', 'femaleClick', 'totalClick'])
 
     recommendation_data['carBrandId'] = car_brand_id
     recommendation_data['carBrandName'] = car_brand_name
@@ -64,8 +67,11 @@ def recommendCar(selectedCar):
     recommendation_data['carVariantId'] = car_variant_id
     recommendation_data['carVariantName'] = car_variant_name
     recommendation_data['price'] = car_variant_price
+    recommendation_data['maleClick'] = car_variant_maleClick
+    recommendation_data['femaleClick'] = car_variant_femaleClick
+    recommendation_data['totalClick'] = car_variant_totalClick
 
     result = recommendation_data.to_json(orient="index")
     parsed = json.loads(result)
 
-    return parsed
+    return result

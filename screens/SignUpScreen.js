@@ -18,11 +18,11 @@ const SignUpScreen = (props) => {
     const genderList = [
         {
           label: 'Male',
-          value: 'male',
+          value: 'Male',
         },
         {
           label: 'Female',
-          value: 'female',
+          value: 'Female',
         },
     ];
 
@@ -118,7 +118,6 @@ const SignUpScreen = (props) => {
                 birthDate: birthDate,
                 gender: gender,
             }
-            console.log(creds)
             props.signUp(creds)
         }
     }

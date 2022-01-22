@@ -22,9 +22,9 @@ app = Flask(__name__)
 @app.route('/time')
 def get_current_time():
     header = ['carBrandId', 'carBrandName', 'carBrandUrl', 'carModelId', 'carModelName', 'carModelUrl',
-              'carVariantId', 'carVariantName', 'bodyType', 'price', 'priceRange']
+              'carVariantId', 'carVariantName', 'bodyType', 'price', 'priceRange', 'maleClick', 'femaleClick', 'totalClick']
 
-    with open('C:/Users/DrPolymath/Downloads/carData.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('C:/Users/DrPolymath/Documents/Programming/Carify/carify-user/api/carData.csv', 'w', encoding='UTF8', newline='') as f:
         writer = csv.writer(f)
 
         # write the header
@@ -52,6 +52,9 @@ def get_current_time():
                     data.append(cmDoc.to_dict()['bodyType'])
                     data.append(cvDoc.to_dict()['price'])
                     data.append(cvDoc.to_dict()['priceRange'])
+                    data.append(cvDoc.to_dict()['maleClick'])
+                    data.append(cvDoc.to_dict()['femaleClick'])
+                    data.append(cvDoc.to_dict()['totalClick'])
                     writer.writerow(data)
 
     return {'time': time.time()}
@@ -83,5 +86,11 @@ def get_current_time():
 
 @app.route('/interest', methods=['GET', 'POST'])
 def get_interest():
+    carVariantName = request.args.get('carVariantName')
+    return recommendCar(carVariantName)
+
+
+@app.route('/random', methods=['GET', 'POST'])
+def get_random():
     carVariantName = request.args.get('carVariantName')
     return recommendCar(carVariantName)

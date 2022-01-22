@@ -1,95 +1,138 @@
-import React from 'react'
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, Image, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { useTheme } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; 
-import { SliderBox } from "react-native-image-slider-box";
 
-const DATA = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      name: "Honda Jazz",
-      url: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FmodelLogo%2FHondaJazz.jpg?alt=media&token=481e2123-e675-494d-93c0-0c8f95ee8f89",
-      images: [
-           "https://images.wapcar.my/file1/3a5442e600394e61b43767ad10a079ad_1072x604.jpg",
-           "https://images.wapcar.my/file1/0c34ca3128b345a7bc95481d50711bff_1072x604.jpg",
-           "https://images.wapcar.my/file1/6a2f15dfb2d746d6b7c83709aee11875_1072x604.jpg",
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import ImageSliderBox from '../components/ImageSliderBox';
+import ExploreMenu from '../components/ExploreMenu';
 
-      ],
-      title: "First Item",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      name: "Toyota Vios",
-      url: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FmodelLogo%2FToyotaVios.jpg?alt=media&token=77a52273-17ee-4d7b-99c3-d6d45134e72b",
-      images: [
-            "https://images.wapcar.my/file1/216d6b01d75f4dc897b932f2c87bfb4e_1072x604.jpg",
-            "https://images.wapcar.my/file1/617b75e0e1bf4e8488c0d07d19818632_1072x604.jpg",
-            "https://images.wapcar.my/file1/331f81050ae249a6b93c953b1d8deb2d_1072x604.jpg",
-
-        ],
-      title: "Second Item",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      name: "Kia Cerato",
-      url: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FmodelLogo%2FKiaCerato.jpg?alt=media&token=71f53bc0-5f94-4178-8b4d-63b617cc858d",
-      images: [
-            "https://images.wapcar.my/file1/7a966fc5a82f40e59ca9f40a794d0728_1072x604.jpg",
-            "https://images.wapcar.my/file1/0c34ca3128b345a7bc95481d50711bff_1072x604.jpg",
-            "https://images.wapcar.my/file1/6a2f15dfb2d746d6b7c83709aee11875_1072x604.jpg",
-
-        ],
-      title: "Third Item",
-    },
-  ];
-
-const ExploreScreen = () => {
-
-    const { colors } = useTheme();
-
-    return (
-        <SafeAreaView style={{ flex: 1, margin: 15 }}>
-            <FlatList
-                style={{flex: 1}}
-                showsVerticalScrollIndicator={false}
-                horizontal={false}
-                data={DATA}
-                renderItem={({item}) => (
-                    <View style={styles.card}>
-                        <View style={styles.cardHeader}>
-                            <View style={{ flex: 3 }}>
-                                <Image
-                                    style={{
-                                        width: 50,
-                                        height: 50,
-                                        resizeMode: 'contain'
-                                    }}
-                                    source={{
-                                        uri: item.url,
-                                    }} 
-                                />
-                            </View>
-                            <View style={{ flex: 12 }}>
-                                <Text style={{ color: colors.primary, fontSize: 20}}>{item.name}</Text>
-                                <Text style={{ fontSize: 10}}>1.5L E 2020</Text>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <MaterialCommunityIcons name="dots-vertical" size={24} color="grey" />
-                            </View>
-                        </View>
-                        <SliderBox 
-                            images={item.images}
-                            parentWidth={330}
-                            ImageComponentStyle={{borderRadius: 15, marginTop: 5 }}
-                        />
-                    </View>
-                )}
-            />
-        </SafeAreaView>
-    )
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-export default ExploreScreen
+const ExploreScreen = ({ carVariants, carPhotos }) => {
+
+    const { colors } = useTheme();
+    const [recommendedCar, setRecommendedCar] = useState([]);
+
+    const renderSliderBox = (processedCarPhotos, carModelId) => {
+        let obj = processedCarPhotos.filter(o => o.cmId === carModelId);
+        return (
+            <ImageSliderBox carPhotos={obj} />
+        )
+    }
+
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+    useEffect(() => {
+        let processes;
+        if(carVariants){
+            let processedcarVariants = Object.entries(carVariants).map(key => ({ ...key[1] }));
+            let randomVariant = processedcarVariants[Math.floor(Math.random() * (processedcarVariants.length-1))].carVariantName
+            const fetchData = async () => {
+                await fetch('http://192.168.100.17:5000/random?carVariantName='+randomVariant)
+                .then(res => res.json())
+                .then(data => {
+                    processes = Object.entries(data).map(key => ({ ...key[1] }));
+                    setRecommendedCar(processes)
+                })
+                .catch(error => {
+                    console.log(error.message)
+                })
+            }
+            fetchData()
+        }
+    }, [carVariants, refreshing])
+
+    if(carPhotos){
+
+        const processedCarPhotos = Object.entries(carPhotos).map(key => ({ ...key[1] }));
+
+        if(processedCarPhotos){
+            return(
+                <SafeAreaView style={{ flex: 1, margin: 15 }}>
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        style={{flex: 1}}
+                        showsVerticalScrollIndicator={false}
+                        horizontal={false}
+                        data={recommendedCar}
+                        refreshControl={<RefreshControl
+                                            refreshing={refreshing}
+                                            onRefresh={onRefresh}
+                                        />}
+                        renderItem={({item}) => (
+                            <View style={styles.card}>
+                                <View style={styles.cardHeader}>
+                                    <View style={{ flex: 3 }}>
+                                        <Image
+                                            style={{
+                                                width: 50,
+                                                height: 50,
+                                                resizeMode: 'contain'
+                                            }}
+                                            source={{
+                                                uri: item.carModelUrl,
+                                            }} 
+                                        />
+                                    </View>
+                                    <View style={{ flex: 12 }}>
+                                        <Text style={{ color: colors.primary, fontSize: 20}}>{item.carBrandName} {item.carModelName}</Text>
+                                        <Text style={{ fontSize: 10}}>{item.carVariantName}</Text>
+                                    </View>
+                                    {/* <View style={{ flex: 1 }}>
+                                        <ExploreMenu carInfo={item}/>
+                                    </View> */}
+                                </View>
+                                {processedCarPhotos ? renderSliderBox(processedCarPhotos, item.carModelId) : null}
+                            </View>
+                        )}
+                    />
+                </SafeAreaView>
+            )
+        } else {
+            return (
+                <View style={[styles.container, styles.horizontal]}>
+                    <ActivityIndicator size="large" color="#0000ff"/>
+                </View>
+            )
+        }
+    } else {
+        return (
+            <View style={[styles.container, styles.horizontal]}>
+                <ActivityIndicator size="large" color="#0000ff"/>
+            </View>
+        )
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        carVariants: state.firestore.data.carVariant,
+        carPhotos: state.firestore.data.carPhotos,
+    }
+}
+
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect([
+        {
+            collectionGroup: 'carVariant',
+            storeAs: 'carVariant'
+        },
+        {
+            collectionGroup: 'photos',
+            storeAs: 'carPhotos'
+        }
+    ])
+)(ExploreScreen)
 
 const styles = StyleSheet.create({
     card: {
@@ -111,4 +154,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
     },
+    container: {
+        flex: 1,
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
+    }
 })

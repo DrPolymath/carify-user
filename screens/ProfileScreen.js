@@ -60,7 +60,7 @@ const ProfileScreen = (props) => {
             </View>
             <View style={{ flex: 7, margin: 20}}>
                 <View style={styles.buttonContainer}>
-                    <Button mode='outlined' style={{ backgroundColor: 'white', borderWidth: 0, elevation: 3 }} labelStyle={{ fontSize: 10 }} onPress={handleConfirmation}>Deactivate</Button>
+                    {/* <Button mode='outlined' style={{ backgroundColor: 'white', borderWidth: 0, elevation: 3 }} labelStyle={{ fontSize: 10 }} onPress={handleConfirmation}>Deactivate</Button> */}
                     <FormDialog title="Update Interest"/>
                     <FormDialog title='Update Profile'/>
                 </View>

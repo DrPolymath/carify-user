@@ -34,7 +34,13 @@ const authReducer = (state = initialState, action) => {
         }
         case 'SIGNOUT_SUCCESS': {
             console.log("success");
-            return state
+            return {
+                ...state,
+                interestedCarBrands: [],
+                interestedCarTypes: [],
+                interestedPriceRanges: [],
+                saveError: null
+            }
         }
         default: {
             return state

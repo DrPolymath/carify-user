@@ -19,11 +19,11 @@ const UpdateProfileForm = (props) => {
     const genderList = [
         {
           label: 'Male',
-          value: 'male',
+          value: 'Male',
         },
         {
           label: 'Female',
-          value: 'female',
+          value: 'Female',
         },
     ];
 

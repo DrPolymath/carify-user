@@ -1,5 +1,3 @@
-import { forEach } from "lodash";
-
 export const fetchRecommendedInput = (carBrandId, bodyType, priceRange) => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         const firestore = getFirestore();
@@ -50,3 +48,80 @@ export const fetchRecommendedInput = (carBrandId, bodyType, priceRange) => {
             })
     }
 }
+
+export const updateClick = (carInfo) => {
+    return (dispatch, getState, { getFirebase }) => {
+        const firestore = getFirebase().firestore();
+        const gender = getState().firebase.profile.gender;
+
+        let newTotalClickNum = parseInt(carInfo.totalClick) + 1;
+
+        if(gender=="Male"){
+
+            let newMaleClickNum = parseInt(carInfo.maleClick) + 1;
+            
+            firestore
+                .collection('carBrand')
+                .doc(carInfo.carBrandId)
+                .collection('carModel')
+                .doc(carInfo.carModelId)
+                .collection('carVariant')
+                .doc(carInfo.carVariantId)
+                .set(
+                    {
+                        carVariantName: carInfo.carVariantName,
+                        cmId: carInfo.carModelId,
+                        price: carInfo.price,
+                        maleClick: newMaleClickNum,
+                        femaleClick: carInfo.femaleClick,
+                        totalClick: newTotalClickNum
+                    },
+                    { merge: true }
+                )
+                .then(() => {
+                    dispatch({
+                        type: 'UPDATE_CLICK_SUCCESS'
+                    });
+                })
+                .catch((err) => {
+                    dispatch({
+                        type: 'UPDATE_CLICK_ERROR',
+                        err
+                    });
+                });
+        } else {
+            let newFemaleClickNum = parseInt(carInfo.femaleClick) + 1;
+            
+            firestore
+                .collection('carBrand')
+                .doc(carInfo.carBrandId)
+                .collection('carModel')
+                .doc(carInfo.carModelId)
+                .collection('carVariant')
+                .doc(carInfo.carVariantId)
+                .set(
+                    {
+                        carVariantName: carInfo.carVariantName,
+                        cmId: carInfo.carModelId,
+                        price: carInfo.price,
+                        maleClick: carInfo.maleClick,
+                        femaleClick: newFemaleClickNum,
+                        totalClick: newTotalClickNum
+                    },
+                    { merge: true }
+                )
+                .then(() => {
+                    dispatch({
+                        type: 'UPDATE_CLICK_SUCCESS'
+                    });
+                })
+                .catch((err) => {
+                    dispatch({
+                        type: 'UPDATE_CLICK_ERROR',
+                        err
+                    });
+                });
+        }
+        
+    };
+};

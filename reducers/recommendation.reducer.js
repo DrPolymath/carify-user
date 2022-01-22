@@ -10,6 +10,13 @@ const recommendationReducer = (state = initialState, action) => {
                 recommendedInput: action.recommendedInput,
             }
         }
+        case 'UPDATE_CLICK_SUCCESS': {
+            return state
+        }
+        case 'UPDATE_CLICK_ERROR': {
+            console.log("Update click error")
+            return state
+        }
         default: {
             return state
         }
