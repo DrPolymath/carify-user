@@ -25,11 +25,13 @@ const SavedCarCard = ({ carInfo, removeSavedCar, handleSetViewCarDetails }) => {
                 style={{
                     width: 125,
                     height: 75,
+                    alignSelf: 'center',
                     resizeMode: 'contain',
                 }}
                 source={{ uri: carInfo.carModelUrl}}
             />
             <Text style={{ color: colors.primary, textAlign: 'center' }}>{carInfo.carBrandName} {carInfo.carModelName}</Text>
+            <Text style={{ color: colors.text, textAlign: 'center' }}>{carInfo.carVariantName}</Text>
         </TouchableOpacity>
     )
 }
@@ -44,8 +46,9 @@ export default connect(null, mapDispatchToProps)(SavedCarCard)
 
 const styles = StyleSheet.create({
     cardContainer: {
+        width: 180,
         backgroundColor: 'white',
-        margin: 10,
+        margin: 5,
         padding: 10,
         borderWidth: 0,
         borderRadius: 20,

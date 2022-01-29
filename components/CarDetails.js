@@ -4,11 +4,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { Button, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper'
 import InfoTable from './InfoTable';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 import PhotoList from './PhotoList';
+import { addSavedCar } from '../actions/savedCar.action';
 
-const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
+const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar }) => {
     const { colors } = useTheme();
     const swiper = useRef(null);
     const [carDetailsTabActive, setCarDetailsTabActive] = useState(true);
@@ -75,10 +76,6 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
     const carVariantColors = useSelector((state) => state.firestore.data.colors)
     const clickedCarVariant = useSelector((state) => state.firestore.data.clickedCarVariant)
 
-    // if(clickedCarVariant){
-    //     handleLatestClick(clickedCarVariant)
-    // }
-
     const navigateToInfosTab = () => {
         if (!carDetailsTabActive) {
             swiper.current.scrollBy(-1)
@@ -95,6 +92,30 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
         }
     }
 
+    const saveCar = () => {
+        let carInfo = {
+            carBrandId: selectedCar.carBrandId,
+            carBrandName: selectedCar.carBrandName,
+            carBrandUrl: selectedCar.carBrandUrl,
+            carModelId: selectedCar.carModelId,
+            carModelName: selectedCar.carModelName,
+            carModelUrl: selectedCar.carModelUrl,
+            bodyType: selectedCar.bodyType,
+            carVariantId: selectedCar.carVariantId,
+            carVariantName: selectedCar.carVariantName,
+            price: selectedCar.price,
+        }
+
+        let clickInfo = {
+            maleClick: clickedCarVariant.maleClick,
+            femaleClick: clickedCarVariant.femaleClick,
+            totalClick: clickedCarVariant.totalClick
+        }
+        // console.log(carInfo)
+        // console.log(clickedCarVariant)
+        addSavedCar(carInfo, clickInfo)
+    }
+
     if(clickedCarVariant){
         return (
             <View style={styles.container}>
@@ -102,9 +123,9 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
                     {/* {clickedCarVariant ? (
                         <AntDesign style={{ color: colors.primary }} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false, clickedCarVariant)} />
                     ) : null} */}
-                    <AntDesign style={{ color: colors.primary }} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false, clickedCarVariant)} />
+                    <AntDesign style={{ color: colors.primary }} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false, null)} />
                     {home ? (
-                        <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false)}>Home</Text>
+                        <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false, null)}>Home</Text>
                     ) : (
                         <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false)}>Saved Car List</Text>
                     )}
@@ -123,7 +144,7 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
                     <Text style={{ color: colors.placeholder, fontSize: 24 }}>{selectedCar.price}</Text>
                     {home ? (
                         <View style={{ marginTop: 15 }}>
-                            <Button mode="contained">
+                            <Button mode="contained" onPress={saveCar}>
                                 Save
                             </Button>
                         </View>
@@ -165,7 +186,13 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home }) => {
     
 }
 
-export default CarDetails
+const mapDispatchToProps = (dispatch) => {
+    return{
+        addSavedCar: (carInfo, clickInfo) => dispatch(addSavedCar(carInfo, clickInfo)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(CarDetails)
 
 const styles = StyleSheet.create({
     container: {

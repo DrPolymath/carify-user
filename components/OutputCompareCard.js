@@ -44,8 +44,7 @@ const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, h
             femaleClick: carVariantObject.femaleClick,
             totalClick: carVariantObject.totalClick
         }
-        console.log(clickInfo)
-        addSavedCar(carInfo, clickInfo);
+        addSavedCar(carInfo, clickInfo)
     }
 
     return (

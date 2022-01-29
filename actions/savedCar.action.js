@@ -4,6 +4,24 @@ export const addSavedCar = (carInfo,clickInfo) => {
         const userId = getState().firebase.auth.uid;
         const gender = getState().firebase.profile.gender;
 
+        let latestClickInfo;
+
+        firestore
+            .collection('carBrand')
+            .doc(carInfo.carBrandId)
+            .collection('carModel')
+            .doc(carInfo.carModelId)
+            .collection('carVariant')
+            .doc(carInfo.carVariantId)
+            .get()
+            .then((doc) =>{
+                latestClickInfo = doc.data()
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+
+
         firestore
             .collection('users')
             .doc(userId)
@@ -13,11 +31,11 @@ export const addSavedCar = (carInfo,clickInfo) => {
             })
             .then(() => {
 
-                let newTotalClickNum = parseInt(clickInfo.totalClick) + 1;
+                let newTotalClickNum = parseInt(latestClickInfo.totalClick) + 1;
 
                 if(gender=="Male"){
 
-                    let newMaleClickNum = parseInt(clickInfo.maleClick) + 1;
+                    let newMaleClickNum = parseInt(latestClickInfo.maleClick) + 1;
                     
                     firestore
                         .collection('carBrand')
@@ -32,7 +50,7 @@ export const addSavedCar = (carInfo,clickInfo) => {
                                 cmId: carInfo.carModelId,
                                 price: carInfo.price,
                                 maleClick: newMaleClickNum,
-                                femaleClick: clickInfo.femaleClick,
+                                femaleClick: latestClickInfo.femaleClick,
                                 totalClick: newTotalClickNum
                             },
                             { merge: true }
@@ -44,7 +62,7 @@ export const addSavedCar = (carInfo,clickInfo) => {
                             console.log(err)
                         });
                 } else {
-                    let newFemaleClickNum = parseInt(clickInfo.femaleClick) + 1;
+                    let newFemaleClickNum = parseInt(latestClickInfo.femaleClick) + 1;
                     
                     firestore
                         .collection('carBrand')
@@ -58,7 +76,7 @@ export const addSavedCar = (carInfo,clickInfo) => {
                                 carVariantName: carInfo.carVariantName,
                                 cmId: carInfo.carModelId,
                                 price: carInfo.price,
-                                maleClick: clickInfo.maleClick,
+                                maleClick: latestClickInfo.maleClick,
                                 femaleClick: newFemaleClickNum,
                                 totalClick: newTotalClickNum
                             },

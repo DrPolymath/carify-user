@@ -7,11 +7,11 @@ import RecommendedCarList from '../components/RecommendedCarList'
 import Carousel from 'react-native-snap-carousel';
 import { fetchRecommendedInput, updateClick } from '../actions/recommendation.action'
 import CarDetails from '../components/CarDetails'
+import HomeRecommendedCarCard from '../components/cards/HomeRecommendedCarCard'
 
-const HomeScreen = (props) => {
+const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, interestedPriceRanges, fetchRecommendedInput, recommendedInput, updateClick }) => {
 
     const { colors } = useTheme();
-    const { auth, profile, interestedCarBrands, interestedCarTypes, interestedPriceRanges, fetchRecommendedInput, recommendedInput, updateClick } = props;
     const [recommendedCar, setRecommendedCar] = useState([]);
     const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
     const SLIDE_WIDTH = Math.round(viewportWidth / 2.25);
@@ -24,29 +24,22 @@ const HomeScreen = (props) => {
     const [viewCarDetails, setViewCarDetails] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
 
-    // const handleLatestClick = (clickedCarVariant) => {
-    //     setSelectedCar(selectedCar => ({
-    //         ...selectedCar,
-    //         maleClick: clickedCarVariant.maleClick,
-    //         femaleClick: clickedCarVariant.femaleClick,
-    //         totalClick: clickedCarVariant.totalClick,
-    //     }))
-    // }
-
     const handleSetViewCarDetails = (carInfo, viewCarDetails, clickedCarVariant) => {
-        if(viewCarDetails === false){
-            let clickedCar = {
-                carBrandId: selectedCar.carBrandId,
-                carModelId: selectedCar.carModelId,
-                carVariantId: selectedCar.carVariantId,
-                carVariantName: selectedCar.carVariantName,
-                price: selectedCar.price,
-                maleClick: clickedCarVariant.maleClick,
-                femaleClick: clickedCarVariant.femaleClick,
-                totalClick: clickedCarVariant.totalClick
-            }
-            updateClick(clickedCar)
-        }
+        // if(viewCarDetails === true){
+        //     // let clickedCar = {
+        //     //     carBrandId: carInfo.carBrandId,
+        //     //     carModelId: carInfo.carModelId,
+        //     //     carVariantId: carInfo.carVariantId,
+        //     //     carVariantName: carInfo.carVariantName,
+        //     //     price: carInfo.price,
+        //     //     maleClick: clickedCarVariant.maleClick,
+        //     //     femaleClick: clickedCarVariant.femaleClick,
+        //     //     totalClick: clickedCarVariant.totalClick
+        //     // }
+        //     // updateClick(clickedCar)
+        //     // console.log(carInfo)
+        //     // console.log(clickedCarVariant)
+        // }
         setViewCarDetails(viewCarDetails)
         setSelectedCar(carInfo)
     }
@@ -54,33 +47,7 @@ const HomeScreen = (props) => {
     const renderItem = ({ item }) => {
         
         return ( 
-            <TouchableOpacity style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor:'white',
-                borderRadius: 20,
-                shadowOffset: { width: 10, height: 10 },
-                shadowColor: 'black',
-                shadowOpacity: 1,
-                elevation: 3,
-                height: 150,
-                marginTop: 10,
-                marginLeft: 10,
-                marginRight: 10, }}
-                onPress={() => handleSetViewCarDetails(item, true, null)}>
-                <Image
-                    style={{
-                        width: 100,
-                        height: 100,
-                        resizeMode: 'contain'
-                    }}
-                    source={{
-                        uri: item.carModelUrl,
-                    }}
-                />
-                <Text style={{color: colors.primary, fontSize: 18, fontWeight: 'bold'}}>{item.carBrandName} {item.carModelName}</Text>
-                <Text style={{  fontSize: 12 }}>{item.carVariantName}</Text>
-            </TouchableOpacity>
+            <HomeRecommendedCarCard item={item} handleSetViewCarDetails={handleSetViewCarDetails} />
         )
     }
 

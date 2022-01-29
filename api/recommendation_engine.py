@@ -35,7 +35,7 @@ def recommendCar(selectedCar):
     index = indices[selectedCar]
 
     sim_scores = list(enumerate(cosine_sim[index]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sorted(sim_scores, key=lambda x: x, reverse=True)
     sim_scores = sim_scores[1:21]
 
     car_indices = [i[0] for i in sim_scores]
