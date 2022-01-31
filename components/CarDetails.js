@@ -9,7 +9,7 @@ import { useFirestoreConnect } from 'react-redux-firebase';
 import PhotoList from './PhotoList';
 import { addSavedCar } from '../actions/savedCar.action';
 
-const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar }) => {
+const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, explore }) => {
     const { colors } = useTheme();
     const swiper = useRef(null);
     const [carDetailsTabActive, setCarDetailsTabActive] = useState(true);
@@ -126,6 +126,8 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar })
                     <AntDesign style={{ color: colors.primary }} name="arrowleft" size={24} color="black" onPress={() => handleSetViewCarDetails(null, false, null)} />
                     {home ? (
                         <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false, null)}>Home</Text>
+                    ) : explore ? (
+                        <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false, null)}>Explore</Text>
                     ) : (
                         <Text style={{ marginTop: 3, marginLeft: 10, color: colors.primary }} onPress={() => handleSetViewCarDetails(null, false)}>Saved Car List</Text>
                     )}
@@ -142,7 +144,7 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar })
                     <Text style={{ color: colors.primary, fontSize: 24 }}>{selectedCar.carBrandName} {selectedCar.carModelName}</Text>
                     <Text style={{ marginVertical: 10 }}>{selectedCar.carVariantName}</Text>
                     <Text style={{ color: colors.placeholder, fontSize: 24 }}>{selectedCar.price}</Text>
-                    {home ? (
+                    {home||explore ? (
                         <View style={{ marginTop: 15 }}>
                             <Button mode="contained" onPress={saveCar}>
                                 Save

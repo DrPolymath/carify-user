@@ -12,7 +12,7 @@ export const updateProfile = (profile) => {
                     username: profile.username,
                     firstname: profile.firstname,
                     lastname: profile.lastname,
-                    email: profile.email,
+                    birthDate: profile.birthDate,
                     phoneNumber: profile.phoneNumber,
                     gender: profile.gender
                 },
@@ -43,7 +43,6 @@ export const updateProfilePicture = (profile) => {
             .doc(userId)
             .set(
                 {
-                    ...profile,
                     url: profile.url,
                 },
                 { merge: true }

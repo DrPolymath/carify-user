@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, SafeAreaView, StatusBar, StyleSheet, View } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, ToastAndroid, View } from 'react-native'
 import { Button, Text, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper'
 import { connect } from 'react-redux';
@@ -70,13 +70,12 @@ const InterestScreen = (props) => {
 
     const handleSubmit = () => {
         if(!selectedCB.length){
-            console.log('Please select at least one interested car brand')
+            ToastAndroid.showWithGravity("Please select at least one interested car brand!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else if(!selectedCT.length){
-            console.log('Please select at least one interested car type')
+            ToastAndroid.showWithGravity("Please select at least one interested car type!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else if(!selectedPR.length){
-            console.log('Please select at least one interested price range')
+            ToastAndroid.showWithGravity("Please select at least one interested price range!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         } else {
-            console.log('yey')
             props.saveInterestedCarBrand(selectedCB)
             props.saveInterestedCarType(selectedCT)
             props.saveInterestedPriceRange(selectedPR)

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, ToastAndroid, View } from 'react-native'
 import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
 import { Button, useTheme } from 'react-native-paper'
@@ -44,13 +44,13 @@ const MultiSelectBox = (props) => {
 
     const updateInterest = () => {
         if(selectedCarBrands.length === 0) {
-            console.log('Please select at least one car brand')
+            ToastAndroid.showWithGravity("Please select at least one interested car brand!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         }
         if(selectedCarTypes.length === 0) {
-            console.log('Please select at least one car type')
+            ToastAndroid.showWithGravity("Please select at least one interested car type!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         }
         if(selectedPriceRanges.length === 0) {
-            console.log('Please select at least one price range')
+            ToastAndroid.showWithGravity("Please select at least one interested price range!", ToastAndroid.SHORT, ToastAndroid.CENTER);
         }
 
 

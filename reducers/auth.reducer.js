@@ -1,3 +1,5 @@
+import { ToastAndroid } from "react-native";
+
 const initialState = {
     authError: null
 };
@@ -13,6 +15,11 @@ const authReducer = (state = initialState, action) => {
         }
         case 'LOGIN_ERROR': {
             console.log("error");
+            if(action.err.message === "There is no user record corresponding to this identifier. The user may have been deleted."){
+                ToastAndroid.showWithGravity("The user do not exist.", ToastAndroid.SHORT, ToastAndroid.CENTER);
+            } else if (action.err.message === "The password is invalid or the user does not have a password.") {
+                ToastAndroid.showWithGravity("The password is invalid.", ToastAndroid.SHORT, ToastAndroid.CENTER);
+            }
             return {
                 ...state,
                 authError: action.err.message

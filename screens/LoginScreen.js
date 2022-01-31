@@ -48,13 +48,13 @@ const LoginScreen = (props) => {
         
     }
 
-    useEffect(() => {
-        if(props.authError === "There is no user record corresponding to this identifier. The user may have been deleted."){
-            ToastAndroid.showWithGravity("The user do not exist.", ToastAndroid.SHORT, ToastAndroid.CENTER);
-        } else if (props.authError === "The password is invalid or the user does not have a password.") {
-            ToastAndroid.showWithGravity("The password is invalid.", ToastAndroid.SHORT, ToastAndroid.CENTER);
-        }
-    }, [props.authError])
+    // useEffect(() => {
+    //     if(props.authError === "There is no user record corresponding to this identifier. The user may have been deleted."){
+    //         ToastAndroid.showWithGravity("The user do not exist.", ToastAndroid.SHORT, ToastAndroid.CENTER);
+    //     } else if (props.authError === "The password is invalid or the user does not have a password.") {
+    //         ToastAndroid.showWithGravity("The password is invalid.", ToastAndroid.SHORT, ToastAndroid.CENTER);
+    //     }
+    // }, [props.authError])
 
     return (
         <SafeAreaView style={styles.container}>

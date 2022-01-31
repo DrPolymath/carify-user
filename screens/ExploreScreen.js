@@ -48,7 +48,6 @@ const ExploreScreen = ({ carVariants, carPhotos }) => {
     useEffect(() => {
         let processes;
         if(fetchCarVariants){
-            console.log("masuk")
             let processedcarVariants = Object.entries(carVariants).map(key => ({ ...key[1] }));
             let randomVariant = processedcarVariants[Math.floor(Math.random() * (processedcarVariants.length-1))].carVariantName
             const fetchData = async () => {
@@ -81,7 +80,7 @@ const ExploreScreen = ({ carVariants, carPhotos }) => {
             return(
                 <SafeAreaView style={{ flex: 1, margin: 15 }}>
                     {viewCarDetails === true ? (
-                        <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} home="home" />
+                        <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} explore="explore" />
                     ) : (
                         <FlatList
                             keyExtractor={(item, index) => index.toString()}

@@ -1,5 +1,7 @@
 const initialState = {
     recommendedInput: [],
+    recommendedTopCar:[],
+    recommendedTopBrand:[],
 };
 
 const recommendationReducer = (state = initialState, action) => {
@@ -8,6 +10,18 @@ const recommendationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 recommendedInput: action.recommendedInput,
+            }
+        }
+        case 'RECOMMENDED_TOP_CAR_STATE_CHANGED': {
+            return {
+                ...state,
+                recommendedTopCar: action.recommendedTopCar,
+            }
+        }
+        case 'RECOMMENDED_TOP_BRAND_STATE_CHANGED': {
+            return {
+                ...state,
+                recommendedTopBrand: action.recommendedTopBrand,
             }
         }
         case 'UPDATE_CLICK_SUCCESS': {

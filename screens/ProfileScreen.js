@@ -20,30 +20,13 @@ const ProfileScreen = (props) => {
         }
     }, [auth])
 
-    const handleConfirmation = () => {
-        Alert.alert(
-            "Deactivation Confirmation",
-            "Are you sure you want to deactivate your account?",
-            [
-                {
-                    text: "Cancel",
-                    onPress: () => console.log("Cancel Pressed"),
-                    style: "cancel"
-                },
-                {   text: "Confirm",
-                    onPress: () => console.log("OK Pressed"),
-                }
-            ]
-        );
-    }
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={[styles.upperContainer, { backgroundColor: colors.primary }]}>
                 <View style={styles.imageProfileContainer}>
                     <UpdateProfilePicture />
                 </View>
-                <View style={{ flex: 6 }}>
+                <View style={{ flex: 8 }}>
                         <View style={{ flex: 7, justifyContent: 'center' }}>
                             <Text style={styles.titleInfoText}>{ profile.username }</Text>
                             <Text style={styles.subtitleInfoText}>{ profile.email }</Text>
@@ -57,6 +40,9 @@ const ProfileScreen = (props) => {
                             ) : null }
                         </View>
                 </View>
+                <View style={{ flex: 1 }} >
+                    <Entypo name="log-out" style={{ marginTop: 15 }} color="#ffffff" size={20} onPress={props.signOut} />
+                </View>
             </View>
             <View style={{ flex: 7, margin: 20}}>
                 <View style={styles.buttonContainer}>
@@ -66,20 +52,19 @@ const ProfileScreen = (props) => {
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20 }}>
                     <Text style={{ color: colors.primary, fontSize: 16 }}>Details</Text>
-                    <Entypo name="log-out" color={colors.primary} size={20} onPress={props.signOut} />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'row'}} >
                     <View style={{ flex: 4, justifyContent: "space-around"}}>
                         <Text>First Name</Text>
                         <Text>Last Name</Text>
-                        <Text>Email Address</Text>
+                        <Text>Birth Date</Text>
                         <Text>Phone Number</Text>
                         <Text>Gender</Text>
                     </View>
                     <View style={{ flex: 6, justifyContent: 'space-around'}}>
                         <Text style={styles.profileText}>{ profile.firstname }</Text>
                         <Text style={styles.profileText}>{ profile.lastname }</Text>
-                        <Text style={styles.profileText}>{ profile.email }</Text>
+                        <Text style={styles.profileText}>{ profile.birthDate }</Text>
                         <Text style={styles.profileText}>{ profile.phoneNumber }</Text>
                         <Text style={styles.profileText}>{ profile.gender }</Text>
                     </View>
@@ -114,7 +99,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     imageProfileContainer: {
-        flex: 5, 
+        flex: 7, 
         justifyContent: 'center',
         alignItems: 'center',
     },

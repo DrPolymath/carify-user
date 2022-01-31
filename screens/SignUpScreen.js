@@ -110,6 +110,14 @@ const SignUpScreen = (props) => {
                 25,
                 50
             );
+        } else if(username === ''||email === ''||password === ''||birthDate === ''||gender === '') {
+            ToastAndroid.showWithGravityAndOffset(
+                "Please fill in all the fields to register!",
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50
+            );
         } else {
             let creds = {
                 username: username,

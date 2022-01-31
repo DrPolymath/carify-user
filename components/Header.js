@@ -10,7 +10,6 @@ const Header = () => {
                     style={{ width: 125, resizeMode: 'contain' }}
                     source={require('../assets/logo.png')}
                 />
-                <Appbar.Action icon="magnify" onPress={() => {}} />
             </View>
             
         </Appbar>
