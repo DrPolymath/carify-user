@@ -83,29 +83,6 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
         )
     }
 
-    const TFB = [
-        {
-            name:"Honda",
-            carModelUrl: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FbrandLogo%2Fhonda.png?alt=media&token=302b0cf4-b48a-434e-abfc-d72d6615a20c",
-        },
-        {
-            name:"Toyota",
-            carModelUrl: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FbrandLogo%2Ftoyota.png?alt=media&token=31dbcafd-20f6-43c7-9636-fda9fbab40d5",
-        },
-        {
-            name:"Nissan",
-            carModelUrl: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FbrandLogo%2Fnissan.png?alt=media&token=7c9b389a-b057-42dd-80a3-169c418b6b10",
-        },
-        {
-            name:"Kia",
-            carModelUrl: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FbrandLogo%2Fkia.png?alt=media&token=78a5b19d-3ca7-4ca9-89f0-6975bafc9b5e",
-        },
-        {
-            name:"Hyundai",
-            carModelUrl: "https://firebasestorage.googleapis.com/v0/b/carify-c094d.appspot.com/o/images%2FbrandLogo%2Fhyundai.png?alt=media&token=a669ac3b-19cc-4f90-ba46-8426307beaba",
-        },
-    ]
-
     useEffect(() => {
       fetchTopCar();
       fetchTopBrand();

@@ -4,6 +4,9 @@ import { connect, useSelector } from 'react-redux'
 import { useFirestoreConnect } from 'react-redux-firebase'
 import OutputCompareCard from './OutputCompareCard'
 import Table from './Table'
+import EngineTable from './tables/EngineTable'
+import PerformanceTable from './tables/PerformanceTable'
+import TransmissionTable from './tables/TransmissionTable'
 
 const OutputCompareFirst = ({ auth, carBrand, carModel, carVariant, handleClear }) => {
 
@@ -62,13 +65,85 @@ const OutputCompareFirst = ({ auth, carBrand, carModel, carVariant, handleClear 
                 }
             ],
             storeAs: 'selectedCarVariantFirstColors',
-        }
+        },
+        // Engine
+        {
+            collection: 'carBrand',
+            doc: carBrand,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: carModel,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: carVariant,
+                            subcollections: [
+                                {
+                                    collection: 'engine',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'engineFirst',
+        },
+        // Performance
+        {
+            collection: 'carBrand',
+            doc: carBrand,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: carModel,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: carVariant,
+                            subcollections: [
+                                {
+                                    collection: 'performance',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'performanceFirst',
+        },
+        // Transmission
+        {
+            collection: 'carBrand',
+            doc: carBrand,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: carModel,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: carVariant,
+                            subcollections: [
+                                {
+                                    collection: 'transmission',
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'transmissionFirst',
+        },
     ])
 
     const carBrandObject = useSelector((state) => state.firestore.data.selectedComparisonCarBrandFirst)
     const carModelObject = useSelector((state) => state.firestore.data.selectedComparisonCarModelFirst)
     const carVariantObject = useSelector((state) => state.firestore.data.selectedComparisonCarVariantFirst)
     const carVariantColors = useSelector((state) => state.firestore.data.selectedCarVariantFirstColors)
+    const carVariantEngine = useSelector((state) => state.firestore.data.engineFirst)
+    const carVariantPerformance = useSelector((state) => state.firestore.data.performanceFirst)
+    const carVariantTransmission = useSelector((state) => state.firestore.data.transmissionFirst)
 
     return (
         <ScrollView>
@@ -84,6 +159,15 @@ const OutputCompareFirst = ({ auth, carBrand, carModel, carVariant, handleClear 
                     />
                     {carVariantColors ? (
                         <Table carBrandObject={carBrandObject} carModelObject={carModelObject} carVariantObject={carVariantObject} carVariantColors={carVariantColors}/>
+                    ) : null}
+                    {carVariantEngine ? (
+                        <EngineTable carVariantEngine={carVariantEngine}/>
+                    ) : null}
+                    {carVariantPerformance ? (
+                        <PerformanceTable carVariantPerformance={carVariantPerformance}/>
+                    ) : null}
+                    {carVariantTransmission ? (
+                        <TransmissionTable carVariantTransmission={carVariantTransmission}/>
                     ) : null}
                 </View>
             ): null}

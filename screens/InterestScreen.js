@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, SafeAreaView, StatusBar, StyleSheet, ToastAndroid, View } from 'react-native'
+import { ActivityIndicator, Image, SafeAreaView, StatusBar, StyleSheet, ToastAndroid, View } from 'react-native'
 import { Button, Text, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper'
 import { connect } from 'react-redux';
@@ -109,19 +109,31 @@ const InterestScreen = (props) => {
                     <View style={styles.slide}>
                         <Text style={styles.title}>Brand</Text>
                         <View style={styles.contentContainer}>
-                            <CarBrandList carBrands={carBrands} selectedCB={selectedCB} handleSelectedCB={handleSelectedCB}/>
+                            {carBrands ? (
+                                <CarBrandList carBrands={carBrands} selectedCB={selectedCB} handleSelectedCB={handleSelectedCB}/>
+                            ) : (
+                                <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#0000ff"/>
+                            )}
                         </View>
                     </View>
                     <View style={styles.slide}>
                         <Text style={styles.title}>Car Type</Text>
                         <View style={styles.contentContainer}>
-                            <CarTypeList carTypes={carTypes} selectedCT={selectedCT} handleSelectedCT={handleSelectedCT}/>
+                            {carTypes ? (
+                                <CarTypeList carTypes={carTypes} selectedCT={selectedCT} handleSelectedCT={handleSelectedCT}/>
+                            ) : (
+                                <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#0000ff"/>
+                            )}
                         </View>
                     </View>
                     <View style={styles.slide}>
                         <Text style={styles.title}>Price Range</Text>
                         <View style={styles.contentContainer}>
-                            <PriceRangeList priceRanges={priceRanges} selectedPR={selectedPR} handleSelectedPR={handleSelectedPR}/>
+                            {priceRanges ? (
+                                <PriceRangeList priceRanges={priceRanges} selectedPR={selectedPR} handleSelectedPR={handleSelectedPR}/>
+                            ) : (
+                                <ActivityIndicator style={{ marginTop: 20 }} size="large" color="#0000ff"/>
+                            )}
                         </View>
                         <Button mode='contained' style={{ marginBottom: 20 }} onPress={handleSubmit}>
                             Submit

@@ -9,6 +9,9 @@ import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import PhotoList from './PhotoList';
 import { addSavedCar } from '../actions/savedCar.action';
 import { compose } from 'redux';
+import EngineTable from './tables/EngineTable';
+import PerformanceTable from './tables/PerformanceTable';
+import TransmissionTable from './tables/TransmissionTable';
 
 const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, explore, savedCars }) => {
     const { colors } = useTheme();
@@ -34,6 +37,7 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
             ],
             storeAs: 'photos',
         },
+        // Colors
         {
             collection: 'carBrand',
             doc: selectedCar.carBrandId,
@@ -73,10 +77,82 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
             ],
             storeAs: 'clickedCarVariant',
         },
+        // Engine
+        {
+            collection: 'carBrand',
+            doc: selectedCar.carBrandId,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: selectedCar.carModelId,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: selectedCar.carVariantId,
+                            subcollections: [
+                                {
+                                    collection: 'engine'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'engine',
+        },
+        // Performance
+        {
+            collection: 'carBrand',
+            doc: selectedCar.carBrandId,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: selectedCar.carModelId,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: selectedCar.carVariantId,
+                            subcollections: [
+                                {
+                                    collection: 'performance'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'performance',
+        },
+        // Transmission
+        {
+            collection: 'carBrand',
+            doc: selectedCar.carBrandId,
+            subcollections: [
+                {
+                    collection: 'carModel',
+                    doc: selectedCar.carModelId,
+                    subcollections: [
+                        {
+                            collection: 'carVariant',
+                            doc: selectedCar.carVariantId,
+                            subcollections: [
+                                {
+                                    collection: 'transmission'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            storeAs: 'transmission',
+        },
     ])
     const photos = useSelector((state) => state.firestore.data.photos)
     const carVariantColors = useSelector((state) => state.firestore.data.colors)
     const clickedCarVariant = useSelector((state) => state.firestore.data.clickedCarVariant)
+    const carVariantEngine = useSelector((state) => state.firestore.data.engine)
+    const carVariantPerformance = useSelector((state) => state.firestore.data.performance)
+    const carVariantTransmission = useSelector((state) => state.firestore.data.transmission)
 
     const navigateToInfosTab = () => {
         if (!carDetailsTabActive) {
@@ -176,6 +252,15 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
                             <ScrollView>
                                 {carVariantColors ? (
                                     <InfoTable selectedCar={selectedCar} carVariantColors={carVariantColors}/>
+                                ) : null}
+                                {carVariantEngine ? (
+                                    <EngineTable carVariantEngine={carVariantEngine}/>
+                                ) : null}
+                                {carVariantPerformance ? (
+                                    <PerformanceTable carVariantPerformance={carVariantPerformance}/>
+                                ) : null}
+                                {carVariantTransmission ? (
+                                    <TransmissionTable carVariantTransmission={carVariantTransmission}/>
                                 ) : null}
                             </ScrollView>
                         </View>
