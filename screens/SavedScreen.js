@@ -19,7 +19,7 @@ const SavedScreen = ({ auth }) => {
             <View style={styles.container}>
                 
                 {viewCarDetails === true ? (
-                    <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails}/>
+                    <CarDetails auth={auth} selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails}/>
                 ) : (
                     <SavedCarList auth={auth} handleSetViewCarDetails={handleSetViewCarDetails}/>
                 )}

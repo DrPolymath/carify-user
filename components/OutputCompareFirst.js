@@ -1,11 +1,11 @@
 import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useFirestoreConnect } from 'react-redux-firebase'
 import OutputCompareCard from './OutputCompareCard'
 import Table from './Table'
 
-const OutputCompareFirst = ({ carBrand, carModel, carVariant, handleClear }) => {
+const OutputCompareFirst = ({ auth, carBrand, carModel, carVariant, handleClear }) => {
 
     useFirestoreConnect([
         {
@@ -72,9 +72,10 @@ const OutputCompareFirst = ({ carBrand, carModel, carVariant, handleClear }) => 
 
     return (
         <ScrollView>
-            {carBrandObject && carModelObject && carVariantObject ? (
+            {carBrandObject && carModelObject && carVariantObject && auth.uid ? (
                 <View style={{ marginHorizontal: 10 }}>
                     <OutputCompareCard 
+                        auth={auth}
                         carBrandObject={carBrandObject} 
                         carModelObject={carModelObject} 
                         carVariantObject={carVariantObject} 
@@ -91,6 +92,12 @@ const OutputCompareFirst = ({ carBrand, carModel, carVariant, handleClear }) => 
     )
 }
 
-export default OutputCompareFirst
+const mapStateToProps = (state) => {
+    return {
+        auth: state.firebase.auth,
+    }
+}
+
+export default connect(mapStateToProps, null)(OutputCompareFirst)
 
 const styles = StyleSheet.create({})

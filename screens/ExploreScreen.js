@@ -11,7 +11,7 @@ const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const ExploreScreen = ({ carVariants, carPhotos }) => {
+const ExploreScreen = ({auth, carVariants, carPhotos }) => {
 
     const [recommendedCar, setRecommendedCar] = useState([]);
 
@@ -80,7 +80,7 @@ const ExploreScreen = ({ carVariants, carPhotos }) => {
             return(
                 <SafeAreaView style={{ flex: 1, margin: 15 }}>
                     {viewCarDetails === true ? (
-                        <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} explore="explore" />
+                        <CarDetails auth={auth} selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} explore="explore" />
                     ) : (
                         <FlatList
                             keyExtractor={(item, index) => index.toString()}
@@ -117,6 +117,7 @@ const ExploreScreen = ({ carVariants, carPhotos }) => {
 
 const mapStateToProps = (state) => {
     return {
+        auth: state.firebase.auth,
         carVariants: state.firestore.data.carVariant,
         carPhotos: state.firestore.data.carPhotos,
     }

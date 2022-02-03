@@ -159,7 +159,7 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 {viewCarDetails === true ? (
-                    <CarDetails selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} home="home"/>
+                    <CarDetails auth={auth} selectedCar={selectedCar} handleSetViewCarDetails={handleSetViewCarDetails} home="home"/>
                 ) : (
                     <View style={{ flex: 1, margin: 15 }}>
                         <Text style={{ color: colors.primary, fontSize: 20, fontWeight: 'bold' }}>Recommended For You</Text>

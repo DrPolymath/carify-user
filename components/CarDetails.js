@@ -1,19 +1,21 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View} from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Button, useTheme } from 'react-native-paper';
 import Swiper from 'react-native-swiper'
 import InfoTable from './InfoTable';
 import { connect, useSelector } from 'react-redux';
-import { useFirestoreConnect } from 'react-redux-firebase';
+import { firestoreConnect, useFirestoreConnect } from 'react-redux-firebase';
 import PhotoList from './PhotoList';
 import { addSavedCar } from '../actions/savedCar.action';
+import { compose } from 'redux';
 
-const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, explore }) => {
+const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, explore, savedCars }) => {
     const { colors } = useTheme();
     const swiper = useRef(null);
     const [carDetailsTabActive, setCarDetailsTabActive] = useState(true);
     const [photosTabActive, setPhotosTabActive] = useState(false);
+    const [savedCarList, setSavedCarList] = useState(null);
 
     useFirestoreConnect([
         {
@@ -116,7 +118,14 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
         addSavedCar(carInfo, clickInfo)
     }
 
-    if(clickedCarVariant){
+    useEffect(() => {
+        if(savedCars){
+            setSavedCarList(savedCars)
+        }
+    }, [savedCars]);
+    
+
+    if(clickedCarVariant&&savedCarList){
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1, flexDirection: 'row',marginLeft: 20, marginTop: 10 }}>
@@ -144,7 +153,7 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
                     <Text style={{ color: colors.primary, fontSize: 24 }}>{selectedCar.carBrandName} {selectedCar.carModelName}</Text>
                     <Text style={{ marginVertical: 10 }}>{selectedCar.carVariantName}</Text>
                     <Text style={{ color: colors.placeholder, fontSize: 24 }}>{selectedCar.price}</Text>
-                    {home||explore ? (
+                    {(home||explore)&&!savedCarList.find((element) => {return element.carVariantId === selectedCar.carVariantId}) ? (
                         <View style={{ marginTop: 15 }}>
                             <Button mode="contained" onPress={saveCar}>
                                 Save
@@ -185,7 +194,12 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
         )
     }
 
-    
+}
+
+const mapStateToProps = (state) => {
+    return {
+        savedCars: state.firestore.ordered.savedCar,
+    }
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -194,7 +208,21 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CarDetails)
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect( (props) => ([
+        { 
+            collection: 'users',
+            doc: props.auth.uid,
+            subcollections:[
+                {
+                    collection: 'savedCar',
+                }
+            ],
+            storeAs:'savedCar'
+        }
+    ]))
+)(CarDetails)
 
 const styles = StyleSheet.create({
     container: {
