@@ -2,10 +2,12 @@ import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { connect, useSelector } from 'react-redux'
 import { useFirestoreConnect } from 'react-redux-firebase'
+import EstimationModal from './EstimationModal'
 import OutputCompareCard from './OutputCompareCard'
 import Table from './Table'
 import EngineTable from './tables/EngineTable'
 import PerformanceTable from './tables/PerformanceTable'
+import TransmissionTable from './tables/TransmissionTable'
 
 const OutputCompareThird = ({ auth, carBrand, carModel, carVariant, handleClear }) => {
 
@@ -167,6 +169,9 @@ const OutputCompareThird = ({ auth, carBrand, carModel, carVariant, handleClear 
                     ) : null}
                     {carVariantTransmission ? (
                         <TransmissionTable carVariantTransmission={carVariantTransmission}/>
+                    ) : null}
+                    {carVariantColors ? (
+                        <EstimationModal carVariantObject={carVariantObject} />
                     ) : null}
                 </View>
             ): null}

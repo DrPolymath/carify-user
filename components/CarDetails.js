@@ -12,6 +12,7 @@ import { compose } from 'redux';
 import EngineTable from './tables/EngineTable';
 import PerformanceTable from './tables/PerformanceTable';
 import TransmissionTable from './tables/TransmissionTable';
+import EstimationModal from './EstimationModal';
 
 const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, explore, savedCars }) => {
     const { colors } = useTheme();
@@ -262,6 +263,7 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
                                 {carVariantTransmission ? (
                                     <TransmissionTable carVariantTransmission={carVariantTransmission}/>
                                 ) : null}
+                                <EstimationModal carVariantObject={selectedCar} />
                             </ScrollView>
                         </View>
                         <View style={styles.slide}>

@@ -93,14 +93,7 @@ const CompareScreen = () => {
                 loop={false}
             >
                 <View style={styles.slide}>
-                    {(carBrand !== null && carModel !== null && carVariant !== null) ? (
-                        <OutputCompareFirst
-                            carBrand={carBrand}
-                            carModel={carModel}
-                            carVariant={carVariant}
-                            handleClear={handleClear}
-                        />
-                    ) : (
+                    {(carBrand === null && carModel === null && carVariant === null) ? (
                         <InputCompareCardFirst
                             carBrand={carBrand}
                             handleSetCarBrand={handleSetCarBrand}
@@ -108,6 +101,14 @@ const CompareScreen = () => {
                             handleSetCarModel={handleSetCarModel}
                             carVariant={carVariant}
                             handleSetCarVariant={handleSetCarVariant}
+                        />
+                    ) : (
+                        
+                        <OutputCompareFirst
+                            carBrand={carBrand}
+                            carModel={carModel}
+                            carVariant={carVariant}
+                            handleClear={handleClear}
                         />
                     )}
                 </View>
