@@ -34,18 +34,48 @@ const EstimationModal = ({ carVariantObject }) => {
             );
         } else if(loanPeriod == null) {
             ToastAndroid.showWithGravityAndOffset(
-                "Please enter the interest rate!",
+                "Please enter the loan period!",
                 ToastAndroid.LONG,
                 ToastAndroid.BOTTOM,
                 25,
                 50
             );
         } else {
-            let price = parseFloat(JSON.stringify(carVariantObject.price).replace(/\D/g, ""));
-            let priceAfterDownPayment = price - parseFloat(downPayment)
-            let totalInterest = parseFloat(interestRate) / 100 * priceAfterDownPayment * parseFloat(loanPeriod);
-            let monthlyInstallment = (priceAfterDownPayment+totalInterest)/(parseFloat(loanPeriod)*12);
-            setMonthlyPayment(monthlyInstallment) 
+            var regex = /^[0-9]*\.?[0-9]*$/;
+            let dP = downPayment
+            let iR = interestRate
+            let lP = loanPeriod
+            if(!dP.match(regex)){
+                ToastAndroid.showWithGravityAndOffset(
+                    "Please enter the valid down payment!",
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    50
+                );
+            } else if (!iR.match(regex)){
+                ToastAndroid.showWithGravityAndOffset(
+                    "Please enter the valid interest rate!",
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    50
+                );
+            } else if (!lP.match(regex)){
+                ToastAndroid.showWithGravityAndOffset(
+                    "Please enter the valid loan period!",
+                    ToastAndroid.LONG,
+                    ToastAndroid.BOTTOM,
+                    25,
+                    50
+                );
+            } else {
+                let price = parseFloat(JSON.stringify(carVariantObject.price).replace(/\D/g, ""));
+                let priceAfterDownPayment = price - parseFloat(downPayment)
+                let totalInterest = parseFloat(interestRate) / 100 * priceAfterDownPayment * parseFloat(loanPeriod);
+                let monthlyInstallment = (priceAfterDownPayment+totalInterest)/(parseFloat(loanPeriod)*12);
+                setMonthlyPayment(monthlyInstallment)
+            }
         }
     }
 

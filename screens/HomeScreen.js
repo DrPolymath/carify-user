@@ -13,6 +13,7 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
 
     const { colors } = useTheme();
     const [recommendedCar, setRecommendedCar] = useState(null);
+    const [open, setOpen] = useState(false);
     const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
     const SLIDE_WIDTH = Math.round(viewportWidth / 2.25);
     const ITEM_HORIZONTAL_MARGIN = 15;
@@ -122,6 +123,7 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
                 .then(res => res.json())
                 .then(data => {
                     processes = Object.entries(data).map(key => ({ ...key[1] }));
+                    // setOpen(true)
                     setRecommendedCar(processes)
                 })
                 .catch(error => {
@@ -132,7 +134,10 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
         }
     }, [currRecommendedInput])
 
-    if(recommendedCar!=null&&currRecommendedTopCar.length==20&&currRecommendedTopBrand.length==6) {
+    console.log(recommendedCar)
+
+    if(recommendedCar!=null&&currRecommendedTopCar.length==20&&currRecommendedTopBrand.length==6&&currRecommendedInput!=null) {
+        console.log("masuk1")
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 {viewCarDetails === true ? (
@@ -186,6 +191,7 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
             </SafeAreaView>
         )
     } else {
+        console.log("masuk")
         return (
             <View style={[styles.container, styles.horizontal]}>
                 <ActivityIndicator size="large" color="#0000ff"/>

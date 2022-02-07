@@ -200,20 +200,47 @@ export const fetchTopBrand = () => {
                                             })
                                         }
 
-                                        let sortedRecommendedTopCar = RTC.sort(function (a, b) {
-                                            return b.totalClick - a.totalClick;
-                                        })
+                                        // let sortedRecommendedTopCar = RTC.sort(function (a, b) {
+                                        //     return b.totalClick - a.totalClick;
+                                        // })
 
                                         let recommendedTopBrand = [];
 
-                                        for(let l = 0; l < sortedRecommendedTopCar.length; l++){
-                                            const found = recommendedTopBrand.some(el => el.carBrandName === sortedRecommendedTopCar[l].carBrandName);
-                                            if (!found) recommendedTopBrand.push({ 
-                                                carBrandId: sortedRecommendedTopCar[l].carBrandId,
-                                                carBrandName: sortedRecommendedTopCar[l].carBrandName,
-                                                carBrandUrl: sortedRecommendedTopCar[l].carBrandUrl,
-                                            });
-                                        }
+                                        RTC.reduce(function (res, value) {
+                                            if (!res[value.carBrandId]) {
+                                                res[value.carBrandId] = {
+                                                    carBrandName: value.carBrandName,
+                                                    totalClick: 0,
+                                                    maleClick: 0,
+                                                    femaleClick: 0,
+                                                    carBrandId: value.carBrandId,
+                                                };
+                                              recommendedTopBrand.push(res[value.carBrandId]);
+                                            }
+                                            res[value.carBrandId].totalClick += value.totalClick;
+                                            res[value.carBrandId].maleClick += value.maleClick;
+                                            res[value.carBrandId].femaleClick += value.femaleClick;
+                                            return res;
+                                        }, {});
+                                      
+                                        recommendedTopBrand = recommendedTopBrand
+                                            .sort(function (a, b) {
+                                            return b.totalClick - a.totalClick;
+                                        }).map((item) => {
+                                            return {
+                                              ...item,
+                                              carBrandUrl: carBrand.find((o) => o.id === item.carBrandId).url,
+                                            };
+                                        });
+
+                                        // for(let l = 0; l < sortedRecommendedTopCar.length; l++){
+                                        //     const found = recommendedTopBrand.some(el => el.carBrandName === sortedRecommendedTopCar[l].carBrandName);
+                                        //     if (!found) recommendedTopBrand.push({ 
+                                        //         carBrandId: sortedRecommendedTopCar[l].carBrandId,
+                                        //         carBrandName: sortedRecommendedTopCar[l].carBrandName,
+                                        //         carBrandUrl: sortedRecommendedTopCar[l].carBrandUrl,
+                                        //     });
+                                        // }
 
                                         dispatch({ type: 'RECOMMENDED_TOP_BRAND_STATE_CHANGED', recommendedTopBrand })
 
