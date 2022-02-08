@@ -9,7 +9,7 @@ const PriceRangeList = (props) => {
     return (
         <FlatList
             style={{flex: 1}}
-            numColumns={3}
+            numColumns={2}
             horizontal={false}
             data={priceRanges}
             renderItem={({item}) => (

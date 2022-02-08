@@ -38,7 +38,7 @@ const Card = ({ object, onPress, selectedObject }) => {
             {object.carBrandName}
             {object.carTypeName}
             {object.maxPrice ? (
-                "< " + object.maxPrice
+                object.maxPrice + " < " + object.maxPrice
             ) : null}
             </Text>
         </TouchableOpacity>

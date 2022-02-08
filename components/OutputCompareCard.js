@@ -12,20 +12,24 @@ const OutputCompareCard = ({ carBrandObject, carModelObject, carVariantObject, h
 
     const { colors } = useTheme();
     const [savedCarList, setSavedCarList] = useState(null);
+    const [open, setOpen] = useState([]);
 
-    useEffect(() => {
-        let clickedCar = {
-            carBrandId: carModelObject.cbId,
-            carModelId: carVariantObject.cmId,
-            carVariantId: carVariant,
-            carVariantName: carVariantObject.carVariantName,
-            price: carVariantObject.price,
-            maleClick: carVariantObject.maleClick,
-            femaleClick: carVariantObject.femaleClick,
-            totalClick: carVariantObject.totalClick
-        }
-        updateClick(clickedCar)
-    }, []);
+    // useEffect(() => {
+    //     setOpen(carBrandObject)
+    //     if(carBrandObject&&open.length!=0){
+    //         let clickedCar = {
+    //             carBrandId: carModelObject.cbId,
+    //             carModelId: carVariantObject.cmId,
+    //             carVariantId: carVariant,
+    //             carVariantName: carVariantObject.carVariantName,
+    //             price: carVariantObject.price,
+    //             maleClick: carVariantObject.maleClick,
+    //             femaleClick: carVariantObject.femaleClick,
+    //             totalClick: carVariantObject.totalClick
+    //         }
+    //         updateClick(clickedCar)
+    //     }
+    // }, [carBrandObject]);
 
     useEffect(() => {
         if(savedCars){

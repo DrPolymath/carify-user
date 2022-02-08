@@ -86,7 +86,7 @@ const EstimationModal = ({ carVariantObject }) => {
         setMonthlyPayment(null)
     }
 
-    const closeModal = () => {
+    const openModal = () => {
         setDownPayment(null)
         setInterestRate(null)
         setLoanPeriod(null)
@@ -159,7 +159,7 @@ const EstimationModal = ({ carVariantObject }) => {
             </Modal>
             <Pressable
                 style={[{ backgroundColor: colors.primary }, styles.button]}
-                onPress={closeModal}
+                onPress={openModal}
             >
                 <Text style={styles.textStyle}>Loan Calculator</Text>
             </Pressable>

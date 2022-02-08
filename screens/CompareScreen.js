@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Swiper from 'react-native-swiper'
+import { connect } from 'react-redux'
 import InputCompareCardFirst from '../components/InputCompareCardFirst'
 import InputCompareCardSecond from '../components/InputCompareCardSecond'
 import InputCompareCardThird from '../components/InputCompareCardThird'
@@ -27,6 +28,12 @@ const CompareScreen = () => {
 
     const handleSetCarVariant = (carVariant) => {
         setCarVariant(carVariant)
+        if(carVariant!=null&&!(carVariant instanceof Function)){
+            console.log(carBrand)
+            console.log(carModel)
+            console.log(carVariant)
+            updateClick(carBrand,carModel,carVariant)
+        }
     }
 
     const handleClear = () => {
@@ -34,6 +41,16 @@ const CompareScreen = () => {
         setCarModel(null)
         setCarVariant(null)
     }
+
+    useEffect(() => {
+      if(carVariant!=null){
+          console.log(carBrand)
+          console.log(carModel)
+          console.log(carVariant)
+        // updateClick(carBrand,carModel,carVariant)
+      }
+    }, [carVariant]);
+    
 
     const [carBrandSecond, setCarBrandSecond] = useState(null)
     const [carModelSecond, setCarModelSecond] = useState(null)
@@ -154,7 +171,13 @@ const CompareScreen = () => {
     )
 }
 
-export default CompareScreen
+const mapDispatchToProps = (dispatch) => {
+    return{
+        updateClick: (carBrand,carModel,carVariant) => dispatch(updateClick(carBrand,carModel,carVariant)),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(CompareScreen)
 
 const styles = StyleSheet.create({
     container: {

@@ -155,6 +155,8 @@ const CarDetails = ({ selectedCar, handleSetViewCarDetails, home, addSavedCar, e
     const carVariantPerformance = useSelector((state) => state.firestore.data.performance)
     const carVariantTransmission = useSelector((state) => state.firestore.data.transmission)
 
+    // console.log(selectedCar)
+
     const navigateToInfosTab = () => {
         if (!carDetailsTabActive) {
             swiper.current.scrollBy(-1)

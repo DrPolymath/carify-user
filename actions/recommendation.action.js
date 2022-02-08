@@ -49,6 +49,186 @@ export const fetchRecommendedInput = (carBrandId, bodyType, priceRange) => {
     }
 }
 
+export const fetchRecommendedForYou = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firestore = getFirestore();
+        const userId = getState().firebase.auth.uid;
+
+        let recommendedForYou = [];
+
+        firestore
+            .collection('users')
+            .doc(userId)
+            .collection('interestedCarBrand')
+            .get()
+            .then((snapshot) => {
+                let interestedCarBrands = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return{id, ...data }
+                })
+
+                firestore
+                    .collection('users')
+                    .doc(userId)
+                    .collection('interestedCarType')
+                    .get()
+                    .then((snapshot) => {
+                        let interestedCarTypes = snapshot.docs.map(doc => {
+                            const data = doc.data();
+                            const id = doc.id;
+                            return{id, ...data }
+                        })
+
+                        firestore
+                            .collection('users')
+                            .doc(userId)
+                            .collection('interestedPriceRange')
+                            .get()
+                            .then((snapshot) => {
+                                let interestedPriceRanges = snapshot.docs.map(doc => {
+                                    const data = doc.data();
+                                    const id = doc.id;
+                                    return{id, ...data }
+                                })
+
+                                firestore
+                                    .collection('carBrand')
+                                    .get()
+                                    .then((snapshot) => {
+                                        let carBrand = snapshot.docs.map(doc => {
+                                            const data = doc.data();
+                                            const id = doc.id;
+                                            return{id, ...data }
+                                        })
+
+                                        let RTC = [];
+
+                                        let n = 0;
+
+                                        for(let i = 0; i < carBrand.length; i++){
+                                            firestore
+                                                .collection('carBrand')
+                                                .doc(carBrand[i].id)
+                                                .collection('carModel')
+                                                .get()
+                                                .then((snapshot) => {
+                                                    let carModel = snapshot.docs.map(doc => {
+                                                        const data = doc.data();
+                                                        const id = doc.id;
+                                                        return{id, ...data }
+                                                    })
+
+                                                    // let m = 0;
+
+                                                    for(let j = 0; j < carModel.length; j++){
+
+                                                        firestore
+                                                            .collection('carBrand')
+                                                            .doc(carBrand[i].id)
+                                                            .collection('carModel')
+                                                            .doc(carModel[j].id)
+                                                            .collection('carVariant')
+                                                            .get()
+                                                            .then((snapshot) => {
+                                                                let carVariant = snapshot.docs.map(doc => {
+                                                                    const data = doc.data();
+                                                                    const id = doc.id;
+                                                                    return{id, ...data }
+                                                                })
+
+                                                                for(let k = 0; k < carVariant.length; k++){
+                                                                    RTC.push({
+                                                                        carBrandId: carBrand[i].id,
+                                                                        carBrandName: carBrand[i].carBrandName,
+                                                                        carBrandUrl: carBrand[i].url,
+                                                                        carModelId: carModel[j].id,
+                                                                        carModelName: carModel[j].carModelName,
+                                                                        carModelUrl: carModel[j].url,
+                                                                        bodyType: carModel[j].bodyType,
+                                                                        carVariantId: carVariant[k].id,
+                                                                        carVariantName: carVariant[k].carVariantName,
+                                                                        price: carVariant[k].price,
+                                                                        femaleClick: carVariant[k].femaleClick,
+                                                                        maleClick: carVariant[k].maleClick,
+                                                                        totalClick: carVariant[k].totalClick
+                                                                    })
+                                                                }
+
+                                                                // let sortedRecommendedTopCar = RTC.sort(function (a, b) {
+                                                                //     return b.totalClick - a.totalClick;
+                                                                // })
+
+                                                                // let recommendedTopCar = sortedRecommendedTopCar.slice(0, 20);
+
+                                                                let rFYBrand = [];
+                                                                let rFYType = [];
+                                                                let rFYPrice = [];
+
+                                                                for (let index = 0; index < interestedCarBrands.length; index++) {
+                                                                    let tempBrand = RTC.filter(e => e.carBrandId == interestedCarBrands[index].id)
+                                                                    rFYBrand = [...rFYBrand,...tempBrand]
+                                                                }
+
+                                                                for (let index = 0; index < interestedCarTypes.length; index++) {
+                                                                    let tempType = RTC.filter(e => e.bodyType == interestedCarTypes[index].carTypeName)
+                                                                    rFYType = [...rFYType,...tempType]
+                                                                }
+
+                                                                for (let index = 0; index < interestedPriceRanges.length; index++) {
+                                                                    let tempRange = RTC.filter(e => parseInt(JSON.stringify(e.price).replace(/\D/g, "")) > parseInt(interestedPriceRanges[index].minPrice) && parseInt(JSON.stringify(e.price).replace(/\D/g, "")) < parseInt(interestedPriceRanges[index].maxPrice))
+                                                                    rFYPrice = [...rFYPrice,...tempRange]
+                                                                }
+                                                                
+                                                                recommendedForYou = [...rFYBrand,...rFYType, ...rFYPrice]
+
+                                                                recommendedForYou = recommendedForYou.filter( (ele, ind) => ind === recommendedForYou.findIndex( elem => elem.carVariantId === ele.carVariantId))
+                                                                // console.log(interestedCarTypes)
+                                                                // console.log(interestedPriceRanges)
+                                                                // console.log(RTC)
+                                                                // console.log(RTC.length)
+                                                                if(RTC.length == 31){
+                                                                    // console.log("masukbearapa")
+                                                                    dispatch({ type: 'RECOMMENDED_FOR_YOU_STATE_CHANGED', recommendedForYou })
+                                                                }
+
+                                                                // console.log("seleng")
+                                                                // console.log(n)
+                                                                // console.log(m)
+                                                                // console.log(carBrand.length)
+                                                                // console.log(carModel.length)
+
+                                                                n++;
+                                                            }).catch((err) => {
+                                                                console.error(err)
+                                                            })
+
+                                                    }
+                                                    // n++;
+                                                }).catch((err) => {
+                                                    console.error(err)
+                                                })
+                                        }
+                                    }).catch((err) => {
+                                        console.error(err)
+                                    })
+
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                        
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
+
 export const fetchTopCar = () => {
     return (dispatch, getState, {getFirebase, getFirestore}) => {
         const firestore = getFirestore();
@@ -65,6 +245,8 @@ export const fetchTopCar = () => {
 
                 let RTC = [];
 
+                let n = 0;
+
                 for(let i = 0; i < carBrand.length; i++){
                     firestore
                         .collection('carBrand')
@@ -77,6 +259,8 @@ export const fetchTopCar = () => {
                                 const id = doc.id;
                                 return{id, ...data }
                             })
+
+                            let m = 0;
 
                             for(let j = 0; j < carModel.length; j++){
 
@@ -118,15 +302,22 @@ export const fetchTopCar = () => {
 
                                         let recommendedTopCar = sortedRecommendedTopCar.slice(0, 20);
 
-                                        dispatch({ type: 'RECOMMENDED_TOP_CAR_STATE_CHANGED', recommendedTopCar })
-
+                                        console.log(RTC.length)
+                                        if(RTC.length == 31){
+                                            // console.log("dsgfsdgsd")
+                                            dispatch({ type: 'RECOMMENDED_TOP_CAR_STATE_CHANGED', recommendedTopCar })
+                                        }
+                                        // console.log("seleng")
+                                        // console.log(n)
+                                        // console.log(m)
+                                        // console.log(carBrand.length)
+                                        // console.log(carModel.length)
+                                        m++;
                                     }).catch((err) => {
                                         console.error(err)
                                     })
-
-                                
                             }
-
+                            n++;
                         }).catch((err) => {
                             console.error(err)
                         })
@@ -153,6 +344,8 @@ export const fetchTopBrand = () => {
 
                 let RTC = [];
 
+                let n = 0;
+
                 for(let i = 0; i < carBrand.length; i++){
                     firestore
                         .collection('carBrand')
@@ -165,6 +358,9 @@ export const fetchTopBrand = () => {
                                 const id = doc.id;
                                 return{id, ...data }
                             })
+
+                            // let j;
+                            let m = 0
 
                             for(let j = 0; j < carModel.length; j++){
 
@@ -242,14 +438,17 @@ export const fetchTopBrand = () => {
                                         //     });
                                         // }
 
-                                        dispatch({ type: 'RECOMMENDED_TOP_BRAND_STATE_CHANGED', recommendedTopBrand })
-
+                                        if(RTC.length == 31){
+                                            // console.log("dsgfsdgsdghdhdhdfhfd")
+                                            dispatch({ type: 'RECOMMENDED_TOP_BRAND_STATE_CHANGED', recommendedTopBrand })
+                                        }
+                                        
+                                        m++;
                                     }).catch((err) => {
                                         console.error(err)
                                     })
-
                             }
-
+                            n++;
                         }).catch((err) => {
                             console.error(err)
                         })
@@ -260,31 +459,138 @@ export const fetchTopBrand = () => {
     }
 }
 
-export const updateClick = (carInfo) => {
+export const fetchRandomCar = () => {
+    return (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firestore = getFirestore();
+
+        firestore
+            .collection('carBrand')
+            .get()
+            .then((snapshot) => {
+                let carBrand = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const id = doc.id;
+                    return{id, ...data }
+                })
+
+                let RTC = [];
+
+                for(let i = 0; i < carBrand.length; i++){
+                    firestore
+                        .collection('carBrand')
+                        .doc(carBrand[i].id)
+                        .collection('carModel')
+                        .get()
+                        .then((snapshot) => {
+                            let carModel = snapshot.docs.map(doc => {
+                                const data = doc.data();
+                                const id = doc.id;
+                                return{id, ...data }
+                            })
+
+                            for(let j = 0; j < carModel.length; j++){
+
+                                firestore
+                                    .collection('carBrand')
+                                    .doc(carBrand[i].id)
+                                    .collection('carModel')
+                                    .doc(carModel[j].id)
+                                    .collection('carVariant')
+                                    .get()
+                                    .then((snapshot) => {
+                                        let carVariant = snapshot.docs.map(doc => {
+                                            const data = doc.data();
+                                            const id = doc.id;
+                                            return{id, ...data }
+                                        })
+
+                                        for(let k = 0; k < carVariant.length; k++){
+                                            RTC.push({
+                                                carBrandId: carBrand[i].id,
+                                                carBrandName: carBrand[i].carBrandName,
+                                                carBrandUrl: carBrand[i].url,
+                                                carModelId: carModel[j].id,
+                                                carModelName: carModel[j].carModelName,
+                                                carModelUrl: carModel[j].url,
+                                                bodyType: carModel[j].bodyType,
+                                                carVariantId: carVariant[k].id,
+                                                carVariantName: carVariant[k].carVariantName,
+                                                price: carVariant[k].price,
+                                                femaleClick: carVariant[k].femaleClick,
+                                                maleClick: carVariant[k].maleClick,
+                                                totalClick: carVariant[k].totalClick
+                                            })
+                                        }
+
+                                        let sortedRecommendedTopCar = RTC.sort(() => 0.5 - Math.random());
+
+                                        let recommendedRandomCar = sortedRecommendedTopCar.slice(0, 10);
+
+                                        if(RTC.length == 31){
+                                            // console.log("dsgfsdgsd")
+                                            dispatch({ type: 'RECOMMENDED_RANDOM_CAR_STATE_CHANGED', recommendedRandomCar })
+                                        }
+                                        // console.log("seleng")
+                                        // console.log(n)
+                                        // console.log(m)
+                                        // console.log(carBrand.length)
+                                        // console.log(carModel.length)
+                                    }).catch((err) => {
+                                        console.error(err)
+                                    })
+                            }
+                        }).catch((err) => {
+                            console.error(err)
+                        })
+                }
+            }).catch((err) => {
+                console.error(err)
+            })
+    }
+}
+
+export const updateClick = (carBrand,carModel,carVariant) => {
     return (dispatch, getState, { getFirebase }) => {
         const firestore = getFirebase().firestore();
         const gender = getState().firebase.profile.gender;
 
-        let newTotalClickNum = parseInt(carInfo.totalClick) + 1;
+        let latestClickInfo;
+
+        firestore
+            .collection('carBrand')
+            .doc(carBrand)
+            .collection('carModel')
+            .doc(carModel)
+            .collection('carVariant')
+            .doc(carVariant)
+            .get()
+            .then((doc) =>{
+                latestClickInfo = doc.data()
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+
+        let newTotalClickNum = parseInt(latestClickInfo.totalClick) + 1;
 
         if(gender=="Male"){
 
-            let newMaleClickNum = parseInt(carInfo.maleClick) + 1;
+            let newMaleClickNum = parseInt(latestClickInfo.maleClick) + 1;
             
             firestore
                 .collection('carBrand')
-                .doc(carInfo.carBrandId)
+                .doc(carBrand)
                 .collection('carModel')
-                .doc(carInfo.carModelId)
+                .doc(carModel)
                 .collection('carVariant')
-                .doc(carInfo.carVariantId)
+                .doc(carVariant)
                 .set(
                     {
-                        carVariantName: carInfo.carVariantName,
-                        cmId: carInfo.carModelId,
-                        price: carInfo.price,
+                        carVariantName: latestClickInfo.carVariantName,
+                        cmId: latestClickInfo.carModelId,
+                        price: latestClickInfo.price,
                         maleClick: newMaleClickNum,
-                        femaleClick: carInfo.femaleClick,
+                        femaleClick: latestClickInfo.femaleClick,
                         totalClick: newTotalClickNum
                     },
                     { merge: true }
@@ -301,21 +607,21 @@ export const updateClick = (carInfo) => {
                     });
                 });
         } else {
-            let newFemaleClickNum = parseInt(carInfo.femaleClick) + 1;
+            let newFemaleClickNum = parseInt(latestClickInfo.femaleClick) + 1;
             
             firestore
                 .collection('carBrand')
-                .doc(carInfo.carBrandId)
+                .doc(carBrand)
                 .collection('carModel')
-                .doc(carInfo.carModelId)
+                .doc(carModel)
                 .collection('carVariant')
-                .doc(carInfo.carVariantId)
+                .doc(carVariant)
                 .set(
                     {
-                        carVariantName: carInfo.carVariantName,
-                        cmId: carInfo.carModelId,
-                        price: carInfo.price,
-                        maleClick: carInfo.maleClick,
+                        carVariantName: latestClickInfo.carVariantName,
+                        cmId: latestClickInfo.carModelId,
+                        price: latestClickInfo.price,
+                        maleClick: latestClickInfo.maleClick,
                         femaleClick: newFemaleClickNum,
                         totalClick: newTotalClickNum
                     },

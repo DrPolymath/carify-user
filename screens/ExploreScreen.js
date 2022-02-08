@@ -6,12 +6,13 @@ import { firestoreConnect } from 'react-redux-firebase';
 import ExploreMenu from '../components/ExploreMenu';
 import ExploreRecommendedCarCard from '../components/cards/ExploreRecommendedCarCard';
 import CarDetails from '../components/CarDetails';
+import { fetchRandomCar } from '../actions/recommendation.action';
 
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
 }
 
-const ExploreScreen = ({auth, carVariants, carPhotos }) => {
+const ExploreScreen = ({auth, carVariants, carPhotos, fetchRandomCar, recommendedRandomCar }) => {
 
     const [recommendedCar, setRecommendedCar] = useState([]);
 
@@ -21,6 +22,7 @@ const ExploreScreen = ({auth, carVariants, carPhotos }) => {
     const [selectedCar, setSelectedCar] = useState(null);
 
     const [fetchCarVariants, setFetchCarVariants] = useState(null);
+    const [currRecommendedRandomCar, setCurrRecommendedRandomCar] = useState(null);
 
     const handleSetViewCarDetails = (carInfo, viewCarDetails, clickedCarVariant) => {
         // if(viewCarDetails === false){
@@ -42,37 +44,47 @@ const ExploreScreen = ({auth, carVariants, carPhotos }) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
+        fetchRandomCar()
+        wait(2250).then(() => setRefreshing(false));
     }, []);
 
-    useEffect(() => {
-        let processes;
-        if(fetchCarVariants){
-            let processedcarVariants = Object.entries(carVariants).map(key => ({ ...key[1] }));
-            let randomVariant = processedcarVariants[Math.floor(Math.random() * (processedcarVariants.length-1))].carVariantName
-            const fetchData = async () => {
-                await fetch('http://192.168.100.17:5000/random?carVariantName='+randomVariant)
-                .then(res => res.json())
-                .then(data => {
-                    processes = Object.entries(data).map(key => ({ ...key[1] }));
-                    setRecommendedCar(processes)
-                })
-                .catch(error => {
-                    console.log(error.message)
-                })
-            }
-            fetchData()
-        }
-    }, [fetchCarVariants])
+    // useEffect(() => {
+    //     let processes;
+    //     if(fetchCarVariants){
+    //         let processedcarVariants = Object.entries(carVariants).map(key => ({ ...key[1] }));
+    //         let randomVariant = processedcarVariants[Math.floor(Math.random() * (processedcarVariants.length-1))].carVariantName
+    //         const fetchData = async () => {
+    //             await fetch('http://192.168.100.17:5000/random?carVariantName='+randomVariant)
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 processes = Object.entries(data).map(key => ({ ...key[1] }));
+    //                 setRecommendedCar(processes)
+    //             })
+    //             .catch(error => {
+    //                 console.log(error.message)
+    //             })
+    //         }
+    //         fetchData()
+    //     }
+    // }, [fetchCarVariants])
 
     useEffect(() => {
         if(carVariants!=null&&fetchCarVariants==null){
             setFetchCarVariants(carVariants)
         }
     }, [carVariants]);
-    
 
-    if(carPhotos&&recommendedCar){
+    useEffect(() => {
+      fetchRandomCar();
+    }, []);
+    
+    useEffect(() => {
+        if(recommendedRandomCar.length!=0){
+            setCurrRecommendedRandomCar(recommendedRandomCar)
+        }
+      }, [recommendedRandomCar]);
+
+    if(carPhotos&&currRecommendedRandomCar!=null){
 
         const processedCarPhotos = Object.entries(carPhotos).map(key => ({ ...key[1] }));
 
@@ -87,7 +99,7 @@ const ExploreScreen = ({auth, carVariants, carPhotos }) => {
                             style={{flex: 1}}
                             showsVerticalScrollIndicator={false}
                             horizontal={false}
-                            data={recommendedCar}
+                            data={currRecommendedRandomCar}
                             refreshControl={<RefreshControl
                                                 refreshing={refreshing}
                                                 onRefresh={onRefresh}
@@ -120,11 +132,17 @@ const mapStateToProps = (state) => {
         auth: state.firebase.auth,
         carVariants: state.firestore.data.carVariant,
         carPhotos: state.firestore.data.carPhotos,
+        recommendedRandomCar: state.recommendation.recommendedRandomCar,
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchRandomCar: () => dispatch(fetchRandomCar()),
     }
 }
 
 export default compose(
-    connect(mapStateToProps),
+    connect(mapStateToProps,mapDispatchToProps),
     firestoreConnect([
         {
             collectionGroup: 'carVariant',

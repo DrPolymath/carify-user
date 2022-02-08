@@ -25,8 +25,8 @@ const MultiSelectBox = (props) => {
     const processedCarBrands = Object.entries(carBrands).map(key => ({ ...key[1], id:key[0], item: key[1].carBrandName}))
     const processedInterestedCarTypes = Object.entries(interestedCarTypes).map(key => ({ ...key[1], interestId: key[0], item: key[1].carTypeName}));
     const processedCarTypes = Object.entries(carTypes).map(key => ({ ...key[1], id:key[0], item: key[1].carTypeName}))
-    const processedInterestedPriceRanges = Object.entries(interestedPriceRanges).map(key => ({ ...key[1], interestId: key[0], item: "< " + key[1].maxPrice}));
-    const processedPriceRanges = Object.entries(priceRanges).map(key => ({ ...key[1], id:key[0], item: "< " + key[1].maxPrice}))
+    const processedInterestedPriceRanges = Object.entries(interestedPriceRanges).map(key => ({ ...key[1], interestId: key[0], item: key[1].minPrice + " < " + key[1].maxPrice}));
+    const processedPriceRanges = Object.entries(priceRanges).map(key => ({ ...key[1], id:key[0], item: key[1].minPrice + " < " + key[1].maxPrice}))
 
     const [selectedCarBrands, setSelectedCarBrands] = useState(processedInterestedCarBrands)
     const [selectedCarTypes, setSelectedCarTypes] = useState(processedInterestedCarTypes)

@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 import { fetchInterestedCarBrand, fetchInterestedCarType, fetchInterestedPriceRange } from '../actions/profile.action'
 import RecommendedCarList from '../components/RecommendedCarList'
 import Carousel from 'react-native-snap-carousel';
-import { fetchRecommendedInput, fetchTopBrand, fetchTopCar, updateClick } from '../actions/recommendation.action'
+import { fetchRecommendedForYou, fetchRecommendedInput, fetchTopBrand, fetchTopCar, updateClick } from '../actions/recommendation.action'
 import CarDetails from '../components/CarDetails'
 import HomeRecommendedCarCard from '../components/cards/HomeRecommendedCarCard'
 
-const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, interestedPriceRanges, fetchRecommendedInput, recommendedInput, updateClick, fetchTopCar, recommendedTopCar, fetchTopBrand, recommendedTopBrand }) => {
+const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, interestedPriceRanges, fetchRecommendedInput, recommendedInput, updateClick, fetchTopCar, recommendedTopCar, fetchTopBrand, recommendedTopBrand, fetchRecommendedForYou, recommendedForYou }) => {
 
     const { colors } = useTheme();
     const [recommendedCar, setRecommendedCar] = useState(null);
@@ -23,26 +23,12 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
 
     const [viewCarDetails, setViewCarDetails] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
+    const [currRecommendedForYou, setCurrRecommendedForYou] = useState(null);
     const [currRecommendedTopCar, setCurrRecommendedTopCar] = useState(null);
     const [currRecommendedTopBrand, setCurrRecommendedTopBrand] = useState(null);
-    const [currRecommendedInput, setCurrRecommendedInput] = useState(null);
+    const [temp, setTemp] = useState([]);
 
     const handleSetViewCarDetails = (carInfo, viewCarDetails, clickedCarVariant) => {
-        // if(viewCarDetails === true){
-        //     // let clickedCar = {
-        //     //     carBrandId: carInfo.carBrandId,
-        //     //     carModelId: carInfo.carModelId,
-        //     //     carVariantId: carInfo.carVariantId,
-        //     //     carVariantName: carInfo.carVariantName,
-        //     //     price: carInfo.price,
-        //     //     maleClick: clickedCarVariant.maleClick,
-        //     //     femaleClick: clickedCarVariant.femaleClick,
-        //     //     totalClick: clickedCarVariant.totalClick
-        //     // }
-        //     // updateClick(clickedCar)
-        //     // console.log(carInfo)
-        //     // console.log(clickedCarVariant)
-        // }
         setViewCarDetails(viewCarDetails)
         setSelectedCar(carInfo)
     }
@@ -84,55 +70,74 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
     }
 
     useEffect(() => {
-      fetchTopCar();
-      fetchTopBrand();
+        fetchTopCar()
+        fetchTopBrand()
+        // fetchRecommendedForYou()
     }, []);
 
     useEffect(() => {
-        if(recommendedTopCar!=null){
+        // fetchTopCar();
+        // fetchTopBrand();
+        fetchRecommendedForYou()
+    }, [interestedCarBrands, interestedCarTypes, interestedPriceRanges]);
+
+    useEffect(() => {
+        if(recommendedTopCar.length!=0){
+            console.log("masuk")
             setCurrRecommendedTopCar(recommendedTopCar)
         }
     }, [recommendedTopCar]);
 
     useEffect(() => {
-        if(recommendedTopBrand!=null){
+        if(recommendedTopBrand.length!=0){
             setCurrRecommendedTopBrand(recommendedTopBrand)
         }
     }, [recommendedTopBrand]);
     
-    useEffect(() => {
-        if(interestedCarBrands&&interestedCarTypes&&interestedPriceRanges&&auth.uid!=null){
-            let processedInterestedCarBrands = Object.entries(interestedCarBrands).map(key => ({ ...key[1] }));
-            let processedinterestedCarTypes = Object.entries(interestedCarTypes).map(key => ({ ...key[1] }));
-            fetchRecommendedInput(processedInterestedCarBrands[0].id, processedinterestedCarTypes[0].carTypeName, interestedPriceRanges.minPrice+"<"+interestedPriceRanges.maxPrice)
-        }
-    }, [auth.uid])
+    // useEffect(() => {
+    //     if(interestedCarBrands&&interestedCarTypes&&interestedPriceRanges&&auth.uid!=null){
+    //         let processedInterestedCarBrands = Object.entries(interestedCarBrands).map(key => ({ ...key[1] }));
+    //         let processedinterestedCarTypes = Object.entries(interestedCarTypes).map(key => ({ ...key[1] }));
+    //         fetchRecommendedInput(processedInterestedCarBrands[0].id, processedinterestedCarTypes[0].carTypeName, interestedPriceRanges.minPrice+"<"+interestedPriceRanges.maxPrice)
+    //     }
+    // }, [auth.uid])
+
+    // useEffect(() => {
+    //     if(recommendedInput!=null&&currRecommendedInput==null){
+    //         setCurrRecommendedInput(recommendedInput)
+    //     }
+    // }, [recommendedInput])
 
     useEffect(() => {
-        if(recommendedInput!=null&&currRecommendedInput==null){
-            setCurrRecommendedInput(recommendedInput)
+        setTemp(recommendedForYou)
+        if(recommendedForYou.length!=0&&temp.length!=0){
+            setCurrRecommendedForYou(recommendedForYou)
         }
-    }, [recommendedInput])
+    }, [recommendedForYou]);
 
-    useEffect(() => {
-        let processes;
-        if(currRecommendedInput!=null&&interestedCarBrands&&interestedCarTypes&&interestedPriceRanges&&recommendedCar==null){
-            const fetchData = async (currRecommendedInput) => {
-                await fetch('http://192.168.100.17:5000/interest?carVariantName='+currRecommendedInput[0].carVariantName)
-                .then(res => res.json())
-                .then(data => {
-                    processes = Object.entries(data).map(key => ({ ...key[1] }));
-                    setRecommendedCar(processes)
-                })
-                .catch(error => {
-                    console.log(error.message)
-                })
-            }
-            fetchData(currRecommendedInput)
-        }
-    }, [currRecommendedInput])
+    // useEffect(() => {
+    //     let processes;
+    //     if(currRecommendedInput!=null&&interestedCarBrands&&interestedCarTypes&&interestedPriceRanges&&recommendedCar==null){
+    //         const fetchData = async (currRecommendedInput) => {
+    //             await fetch('http://192.168.100.17:5000/interest?carVariantName='+currRecommendedInput[0].carVariantName)
+    //             .then(res => res.json())
+    //             .then(data => {
+    //                 processes = Object.entries(data).map(key => ({ ...key[1] }));
+    //                 setRecommendedCar(processes)
+    //             })
+    //             .catch(error => {
+    //                 console.log(error.message)
+    //             })
+    //         }
+    //         fetchData(currRecommendedInput)
+    //     }
+    // }, [currRecommendedInput])
 
-    if(recommendedCar!=null&&currRecommendedTopCar.length==20&&currRecommendedTopBrand.length==6&&currRecommendedInput!=null) {
+    // console.log(currRecommendedForYou)
+
+    // console.log(recommendedTopCar)
+
+    if(currRecommendedForYou!=null&&currRecommendedTopCar!=null&&currRecommendedTopBrand!=null) {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 {viewCarDetails === true ? (
@@ -140,20 +145,18 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
                 ) : (
                     <View style={{ flex: 1, margin: 15 }}>
                         <Text style={{ color: colors.primary, fontSize: 20, fontWeight: 'bold' }}>Recommended For You</Text>
-                        {recommendedCar ? (
-                            <Carousel
-                                contentContainerCustomStyle={{overflow: 'hidden', width: ITEM_WIDTH * recommendedCar.length + 20}}
-                                layout={'default'}
-                                ref={carouselRef}
-                                data={recommendedCar}
-                                renderItem={renderItem}
-                                sliderWidth={SLIDER_WIDTH}
-                                itemWidth={ITEM_WIDTH}
-                                activeSlideAlignment={'start'}
-                                inactiveSlideScale={1}
-                                inactiveSlideOpacity={1}        
-                            />
-                        ) : null}
+                        <Carousel
+                            contentContainerCustomStyle={{overflow: 'hidden', width: ITEM_WIDTH * currRecommendedForYou.length + 20}}
+                            layout={'default'}
+                            ref={carouselRef}
+                            data={currRecommendedForYou}
+                            renderItem={renderItem}
+                            sliderWidth={SLIDER_WIDTH}
+                            itemWidth={ITEM_WIDTH}
+                            activeSlideAlignment={'start'}
+                            inactiveSlideScale={1}
+                            inactiveSlideOpacity={1}        
+                        />
                         <Text style={{ color: colors.primary, fontSize: 20, fontWeight: 'bold' }}>Top Favorite Car</Text>
                         <Carousel
                             contentContainerCustomStyle={{overflow: 'hidden', width: ITEM_WIDTH * currRecommendedTopCar.length + 20}}
@@ -188,7 +191,15 @@ const HomeScreen = ({ auth, profile, interestedCarBrands, interestedCarTypes, in
     } else {
         return (
             <View style={[styles.container, styles.horizontal]}>
-                <ActivityIndicator size="large" color="#0000ff"/>
+                {/* <ActivityIndicator size="large" color="#0000ff"/> */}
+                <Image 
+                    source={require('C:/Users/DrPolymath/Documents/Programming/Carify/Backup/carify-user/assets/car_splash.gif')} 
+                    style={{
+                        width: 250,
+                        alignSelf: 'center',
+                        resizeMode: 'contain',
+                    }}
+                    />
             </View>
         )
     }
@@ -204,6 +215,7 @@ const mapStateToProps = (state) => {
         recommendedInput: state.recommendation.recommendedInput,
         recommendedTopCar: state.recommendation.recommendedTopCar,
         recommendedTopBrand: state.recommendation.recommendedTopBrand,
+        recommendedForYou: state.recommendation.recommendedForYou,
     }
 }
 
@@ -216,6 +228,7 @@ const mapDispatchToProps = (dispatch) => {
         updateClick: (carInfo) => dispatch(updateClick(carInfo)),
         fetchTopCar: () => dispatch(fetchTopCar()),
         fetchTopBrand: () => dispatch(fetchTopBrand()),
+        fetchRecommendedForYou: () => dispatch(fetchRecommendedForYou()),
     }
 }
 
@@ -224,7 +237,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center"
+        justifyContent: "center",
+        alignContent: "center"
     },
     horizontal: {
         flexDirection: "row",

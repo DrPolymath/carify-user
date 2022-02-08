@@ -19,7 +19,7 @@ const InterestList = (props) => {
                         horizontal={false}
                         numColumns={3}
                         renderItem={({item}) => (
-                            <Text style={[styles.text, { backgroundColor: colors.accent }]}>{ "< " + item.maxPrice }</Text>
+                            <Text style={[styles.text, { backgroundColor: colors.accent }]}>{ item.minPrice + " < " + item.maxPrice }</Text>
                         )}
                     />
                 ) : (
